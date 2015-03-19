@@ -122,6 +122,22 @@ class LogReader
     }
 
     /**
+     * Finds a logged error by it's ID
+     *
+     * @param string $id
+     * @return mixed|null
+     */
+    public function find($id = '')
+    {
+        $entries = $this->get()->filter(function($entry) use($id)
+        {
+            if($entry->id === $id) return true;
+        });
+
+        return $entries->first();
+    }
+
+    /**
      * Marks all retrieved log entries as read and
      * returns the number of entries that have been marked.
      *

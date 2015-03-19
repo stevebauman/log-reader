@@ -11,6 +11,13 @@ use Illuminate\Support\Facades\Cache;
 class Entry
 {
     /**
+     * The entry's ID
+     *
+     * @var string
+     */
+    public $id = '';
+
+    /**
      * The entry's file path
      *
      * @var string
@@ -139,6 +146,17 @@ class Entry
     }
 
     /**
+     * Returns a compressed entry header suitable to
+     * be used as the entry's ID
+     *
+     * @return string
+     */
+    private function makeId()
+    {
+        return md5($this->header);
+    }
+
+    /**
      * Returns a key string for storing the entry
      * inside the cache
      *
@@ -192,6 +210,16 @@ class Entry
     }
 
     /**
+     * Sets the entry's ID property
+     *
+     * @param $id
+     */
+    private function setId($id)
+    {
+        $this->id = $id;
+    }
+
+    /**
      * Sets the attributes property
      *
      * @param array $attributes
@@ -213,5 +241,6 @@ class Entry
         $this->setLevel($this->getAttribute('level'));
         $this->setHeader($this->getAttribute('header'));
         $this->setStack($this->getAttribute('stack'));
+        $this->setId($this->makeId());
     }
 }
