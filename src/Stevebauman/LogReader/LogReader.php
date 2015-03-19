@@ -430,13 +430,20 @@ class LogReader
     {
         if(is_dir($this->path))
         {
+            /*
+             * Matches all files in the log directory with the type of '.log'
+             */
             $logPath = sprintf('%s%s*.log', $this->path, DIRECTORY_SEPARATOR);
 
             if($this->getDate() != 'none')
             {
+                /*
+                 * Matches files in the log directory with the file name
+                 * of 'laravel-YYYY-MM-DD.log' if a date is supplied
+                 */
                 $logPath = sprintf('%s%slaravel-%s.log', $this->path, DIRECTORY_SEPARATOR, $this->getDate());
             }
-
+            
             return glob($logPath);
         }
     }

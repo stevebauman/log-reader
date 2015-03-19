@@ -45,13 +45,25 @@ Now you can loop over your results and display all the log entries:
 
     LogReader::find($id)->markRead();
     
-This will cache the entry, and exclude it from any results.
+This will cache the entry, and exclude it from any future results.
+
+##### Marking all entries as read:
+
+    LogReader::markRead();
+    
+This will cache all the entries and exclude them from future results.
 
 ##### Deleting a log entry:
 
     LogReader::find($id)->delete();
     
 This will remove the entire entry from the log file, but keep all other entries in-tack.
+
+##### Deleting all log entries:
+
+    LogReader::delete();
+    
+This will remove all entries in all log files. It will not delete the files however.
 
 ##### Getting log entries by level
 
