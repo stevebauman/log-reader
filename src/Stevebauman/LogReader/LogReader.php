@@ -69,7 +69,7 @@ class LogReader
      */
     public function __construct()
     {
-        $this->path = storage_path('logs');
+        $this->setLogPath(storage_path('logs'));
     }
 
     /**
@@ -105,6 +105,10 @@ class LogReader
             {
                 $newEntry = new Entry($entry);
 
+                /*
+                 * Check if the entry has already been read,
+                 * if it is continue
+                 */
                 if($newEntry->isRead()) continue;
 
                 $entries[] = $newEntry;
@@ -249,6 +253,17 @@ class LogReader
     public function getCurrentLogPath()
     {
         return $this->currentLogPath;
+    }
+
+    /**
+     * Sets the directory path to retrieve the
+     * log files from
+     *
+     * @param $path
+     */
+    public function setLogPath($path)
+    {
+        $this->path = $path;
     }
 
     /**
