@@ -3,6 +3,8 @@
 namespace Stevebauman\LogReader;
 
 use Stevebauman\LogReader\Objects\Entry;
+use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Paginator;
 use Illuminate\Support\Collection;
 
 /**
@@ -150,6 +152,27 @@ class LogReader
     }
 
     /**
+     * Paginates the returned log entries
+     *
+     * @param int $perPage
+     * @return mixed
+     */
+    public function paginate($perPage = 25)
+    {
+        $currentPage = $this->getPageFromInput();
+
+        $offset = (($currentPage - 1) * $perPage);
+
+        $entries = $this->get();
+
+        $total = $entries->count();
+
+        $entries = $entries->slice($offset, $perPage, true)->all();
+
+        return Paginator::make($entries, $total, $perPage);
+    }
+
+    /**
      * Sets the level to sort the log entries by
      *
      * @param $level
@@ -226,6 +249,21 @@ class LogReader
     public function getCurrentLogPath()
     {
         return $this->currentLogPath;
+    }
+
+    /**
+     * Returns the current page from the current input.
+     * Used for pagination.
+     *
+     * @return int
+     */
+    private function getPageFromInput()
+    {
+        $page = Input::get('page');
+
+        if(is_numeric($page)) return intval($page);
+
+        return 1;
     }
 
     /**

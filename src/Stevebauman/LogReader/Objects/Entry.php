@@ -204,6 +204,8 @@ class Entry
     /**
      * Assigns the valid keys in the attributes array
      * to the properties in the entry
+     *
+     * @return void
      */
     private function assignAttributes()
     {
