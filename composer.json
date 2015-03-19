@@ -1,6 +1,7 @@
 {
     "name": "stevebauman/log-reader",
-    "description": "",
+    "description": "An easy Laravel log reader and management tool",
+    "tags": ["reader", "log reader", "log", "logs", "laravel"],
     "authors": [
         {
             "name": "Steve Bauman",
