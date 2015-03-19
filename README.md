@@ -67,7 +67,13 @@ This returns a regular Laravel pagination object. You can use it how you'd typic
     @endforeach
     
     {{ $entries->links() }}
-    
+
+You can also combine functions with the pagination like so:
+
+    $date = strtotime('2015-03-19');
+
+    $entries = LogReader::level('error')->date($date)->paginate(25);
+
 ##### Filter by date
 
 If you're running Laravel 4.2, you must enable daily files to filter your log results by date. You can do so here:
