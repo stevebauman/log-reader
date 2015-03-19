@@ -1,4 +1,6 @@
-<?php namespace Stevebauman\LogReader;
+<?php
+
+namespace Stevebauman\LogReader;
 
 use Illuminate\Support\ServiceProvider;
 
@@ -18,13 +20,10 @@ class LogReaderServiceProvider extends ServiceProvider
 	 */
 	public function register()
 	{
-        if(method_exists($this, 'package'))
+        $this->app->bind('log-reader', function()
         {
-            $this->package('stevebauman/log-reader');
-        } else
-        {
-
-        }
+            return new LogReader;
+        });
 	}
 
 	/**

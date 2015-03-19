@@ -3,23 +3,27 @@
 namespace Stevebauman\LogReader;
 
 use Stevebauman\LogReader\Objects\Entry;
-use Illuminate\Support\Facades\File as Filesystem;
+use Illuminate\Support\Collection;
 
+/**
+ * Class LogReader
+ * @package Stevebauman\LogReader
+ */
 class LogReader
 {
-    /**
-     * The laravel filesystem instance
-     *
-     * @var Filesystem
-     */
-    protected $filesystem;
-
     /**
      * The log file path
      *
      * @var string
      */
-    protected $path;
+    protected $path = '';
+
+    /**
+     * The current log file path
+     *
+     * @var string
+     */
+    protected $currentLogPath = '';
 
     /**
      * Stores the direction to order the log entries in
@@ -59,12 +63,10 @@ class LogReader
     );
 
     /**
-     * @param Filesystem $filesystem
+     * Construct a new instance and set the path of the log entries
      */
-    public function __construct(Filesystem $filesystem)
+    public function __construct()
     {
-        $this->filesystem = $filesystem;
-
         $this->path = storage_path('logs');
     }
 
@@ -77,17 +79,74 @@ class LogReader
     {
         $entries = array();
 
+        /*
+         * Retrieve the log files
+         */
         foreach($this->getLogFiles() as $log)
         {
-            $parsedLog = $this->parseLog($log, $this->getLevel());
+            /*
+             * Set the current log path for easy manipulation
+             * of the file if needed
+             */
+            $this->setCurrentLogPath($log['path']);
 
+            /*
+             * Parse the log into an array of entries, passing in the level
+             * so it can be filtered
+             */
+            $parsedLog = $this->parseLog($log['contents'], $this->getLevel());
+
+            /*
+             * Create a new Entry object for each parsed log entry
+             */
             foreach($parsedLog as $entry)
             {
-                $entries[] = new Collection($entry);
+                $newEntry = new Entry($entry);
+
+                if($newEntry->isRead()) continue;
+
+                $entries[] = $newEntry;
             }
         }
 
+        /*
+         * Return a new Collection of entries
+         */
         return new Collection($entries);
+    }
+
+    /**
+     * Marks all retrieved log entries as read and
+     * returns the number of entries that have been marked.
+     *
+     * @return int
+     */
+    public function markRead()
+    {
+        $entries = $this->get();
+
+        $count = 0;
+
+        foreach($entries as $entry) if($entry->markRead()) $count++;
+
+        return $count;
+    }
+
+    /**
+     * Deletes all retrieved log entries and returns
+     * the number of entries that have been deleted.
+     *
+     * @return int
+     */
+    public function delete()
+    {
+        $entries = $this->get();
+
+        $count = 0;
+
+        foreach($entries as $entry) if($entry->delete()) $count++;
+
+        return $count;
     }
 
     /**
@@ -160,6 +219,27 @@ class LogReader
     }
 
     /**
+     * Retrieves the currentLogPath property
+     *
+     * @return string
+     */
+    public function getCurrentLogPath()
+    {
+        return $this->currentLogPath;
+    }
+
+    /**
+     * Sets the currentLogPath property to
+     * the specified path
+     *
+     * @param $path
+     */
+    private function setCurrentLogPath($path)
+    {
+        $this->currentLogPath = $path;
+    }
+
+    /**
      * Sets the orderBy property to the specified direction
      *
      * @param $direction
@@ -173,7 +253,6 @@ class LogReader
 
     /**
      * Sets the level property to the specified level
-     * if it exists inside the levels array
      *
      * @param $level
      */
@@ -181,10 +260,7 @@ class LogReader
     {
         $level = strtolower($level);
 
-        if(in_array($level, $this->levels))
-        {
-            $this->level = $level;
-        }
+        $this->level = $level;
     }
 
     /**
@@ -233,7 +309,12 @@ class LogReader
                     {
                         if (strpos(strtolower($heading[$i]), strtolower('.'.$level)))
                         {
-                            $log[] = ['level' => $level, 'header' => $heading[$i], 'stack' => $data[$i]];
+                            $log[] = array(
+                                'level' => $level,
+                                'header' => $heading[$i],
+                                'stack' => $data[$i],
+                                'filePath' => $this->getCurrentLogPath(),
+                            );
                         }
                     }
                 }
@@ -259,9 +340,13 @@ class LogReader
 
         $files = $this->getLogFileList();
 
+        $count = 0;
+
         foreach($files as $file)
         {
-            $data[] = file_get_contents($file);
+            $data[$count]['contents'] = file_get_contents($file);
+            $data[$count]['path'] = $file;
+            $count++;
         }
 
         return $data;
@@ -274,7 +359,7 @@ class LogReader
      */
     private function getLogFileList()
     {
-        if($this->filesystem->isDirectory($this->path))
+        if(is_dir($this->path))
         {
             $logPath = sprintf('%s%s*.log', $this->path, DIRECTORY_SEPARATOR);
 
@@ -283,7 +368,7 @@ class LogReader
                 $logPath = sprintf('%s%slaravel-%s.log', $this->path, DIRECTORY_SEPARATOR, $this->getDate());
             }
 
-            return $this->filesystem->glob($logPath);
+            return glob($logPath);
         }
     }
 }
