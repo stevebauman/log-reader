@@ -16,6 +16,15 @@ with ease. Using Log Reader is almost exactly like using any Eloquent model.
 
     LogReader::get();
 
+A laravel collection is returned with all of the entries. This means your able to use all of Laravels handy collection
+functions such as: 
+
+    LogReader::get()->first();
+    LogReader::get()->filter($closure);
+    LogReader::get()->lists('id', 'header');
+    LogReader::get()->search();
+    //etc
+
 Now you can loop over your results and display all the log entries:
 
     $entries = LogReader::get();
