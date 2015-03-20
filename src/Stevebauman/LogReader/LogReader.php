@@ -3,6 +3,7 @@
 namespace Stevebauman\LogReader;
 
 use Stevebauman\LogReader\Exceptions\UnableToRetrieveLogFilesException;
+use Stevebauman\LogReader\LogReaderServiceProvider;
 use Stevebauman\LogReader\Objects\Entry;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Paginator;
@@ -459,7 +460,7 @@ class LogReader
         if(is_dir($path))
         {
             /*
-             * Matches all files in the log directory with the type of '.log'
+             * Matches files in the log directory with the name of 'laravel.log'
              */
             $logPath = sprintf('%s%slaravel.log', $path, DIRECTORY_SEPARATOR);
 
@@ -470,6 +471,12 @@ class LogReader
                  * of 'laravel-YYYY-MM-DD.log' if a date is supplied
                  */
                 $logPath = sprintf('%s%slaravel-%s.log', $path, DIRECTORY_SEPARATOR, $this->getDate());
+            } elseif(LogReaderServiceProvider::$laravelVersion === 5)
+            {
+                /*
+                 * Matches files in the log directory with the name of 'laravel-*.log'
+                 */
+                $logPath = sprintf('%s%slaravel-*.log', $path, DIRECTORY_SEPARATOR);
             }
 
             return glob($logPath);
