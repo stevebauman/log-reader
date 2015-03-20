@@ -61,10 +61,11 @@ Now you can loop over your results and display all the log entries:
     
     foreach($entries as $entry)
     {
-        echo $entry->id; // Returns unique md5 string such as: fae8205b40bc9d6663db76011931716f
-        echo $entry->level; // Returns the level of the entry such as: emergency, alert, critical, error etc.
-        echo $entry->header; // Returns the entry header such as: [2015-03-19 14:56:08] production.ERROR ...
-        echo $entry->stack; // Returns the stack trace of the error
+        echo $entry->id;        // Returns unique md5 string such as: fae8205b40bc9d6663db76011931716f
+        echo $entry->level;     // Returns the level of the entry such as: emergency, alert, critical, error etc.
+        echo $entry->header;    // Returns the entry header such as: [2015-03-19 14:56:08] production.ERROR ...
+        echo $entry->stack;     // Returns the stack trace of the error
+        echo $entry->filePath;  // Returns the complete file path of log file which contains the error
     }
 
 ##### Finding a log entry:
