@@ -87,6 +87,14 @@ This will cache the entry, and exclude it from any future results.
     
 This will cache all the entries and exclude them from future results.
 
+#### Including read entries in your results:
+
+    LogReader::includeRead()->get();
+    
+    LogReader::includeRead()->find();
+    
+    // etc.
+
 ##### Deleting a log entry:
 
     LogReader::find($id)->delete();
