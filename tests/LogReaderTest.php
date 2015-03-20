@@ -106,7 +106,7 @@ class LogReaderTest extends \PHPUnit_Framework_TestCase
 
     public function testGet()
     {
-        Cache::shouldReceive('has')->andReturn(false);
+        Cache::shouldReceive('has')->times(8)->andReturn(false);
 
         $entries = $this->logReader->get();
 
@@ -129,7 +129,7 @@ class LogReaderTest extends \PHPUnit_Framework_TestCase
     {
         $entry = $this->logReader->get()->first();
 
-        Cache::shouldReceive('rememberForever')->andReturn($entry);
+        Cache::shouldReceive('rememberForever')->once()->andReturn($entry);
 
         $this->assertEquals($entry, $entry->markRead());
     }
