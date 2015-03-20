@@ -1,6 +1,6 @@
 <?php
 
-namespace Stevebauman\LogReader\Tests;
+namespace Stevebauman\LogReader;
 
 use Mockery as m;
 use Illuminate\Support\Facades\Cache;
