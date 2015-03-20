@@ -91,7 +91,7 @@ This will cache all the entries and exclude them from future results.
 
     LogReader::includeRead()->get();
     
-    LogReader::includeRead()->find();
+    LogReader::includeRead()->find($id);
     
     // etc.
 
