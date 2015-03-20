@@ -171,4 +171,13 @@ class LogReaderTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals(8, $entries->count());
     }
+
+    public function testMethodsGet()
+    {
+        $date = strtotime('2015-03-20');
+
+        $entries = $this->logReader->date($date)->level('info')->get();
+
+        $this->assertEquals(1, $entries->count());
+    }
 }

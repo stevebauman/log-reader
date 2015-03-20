@@ -3,7 +3,7 @@
 
 ## Description
 
-Log Reader is an easy, Laravel log reader and management tool. You're able to view, manage, and modify log entries
+Log Reader is an easy, tested, Laravel log reader and management tool. You're able to view, manage, and modify log entries
 with ease. Using Log Reader is almost exactly like using any Eloquent model.
 
 ## Installation
