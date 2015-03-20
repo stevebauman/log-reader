@@ -50,9 +50,9 @@ class LogReaderTest extends \PHPUnit_Framework_TestCase
 
         $this->setApp($this->mockApplication());
 
-        $this->setLogReader();
-
         $this->setPaths();
+
+        $this->setLogReader();
 
         $this->insertStubsOnSingleLog();
 
@@ -91,6 +91,8 @@ class LogReaderTest extends \PHPUnit_Framework_TestCase
         $this->app->shouldReceive('make')->once()->andReturn(__DIR__ . DIRECTORY_SEPARATOR . 'stubs');
 
         $this->logReader = new LogReader;
+
+        $this->logReader->setLogPath($this->stubsLogPath);
     }
 
     protected function setPaths()
