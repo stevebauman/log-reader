@@ -51,6 +51,14 @@ class LogReader
     protected $date = 'none';
 
     /**
+     * Stores the bool whether or not to return
+     * read entries
+     *
+     * @var bool
+     */
+    protected $includeRead = false;
+
+    /**
      * The log levels
      *
      * @var array
@@ -114,9 +122,12 @@ class LogReader
 
                     /*
                      * Check if the entry has already been read,
-                     * if it is continue
+                     * and if read entries should be included.
+                     *
+                     * If includeRead is false, and the entry is read,
+                     * then continue processing.
                      */
-                    if($newEntry->isRead()) continue;
+                    if( ! $this->includeRead && $newEntry->isRead()) continue;
 
                     $entries[] = $newEntry;
                 }
@@ -178,7 +189,7 @@ class LogReader
 
         $count = 0;
 
-        foreach($entries as $entry) if($entry->delete()) $count++;
+        foreach($entries as $entry) if($entry->delete()) ++$count;
 
         return $count;
     }
@@ -226,6 +237,18 @@ class LogReader
     public function date($date)
     {
         $this->setDate($date);
+
+        return $this;
+    }
+
+    /**
+     * Includes read entries in the log results
+     *
+     * @return $this
+     */
+    public function includeRead()
+    {
+        $this->setIncludeRead(true);
 
         return $this;
     }
@@ -362,6 +385,16 @@ class LogReader
     private function setDate($date)
     {
         $this->date = date('Y-m-d', $date);
+    }
+
+    /**
+     * Sets the includeRead property
+     *
+     * @param bool $bool
+     */
+    private function setIncludeRead($bool = false)
+    {
+        $this->includeRead = $bool;
     }
 
     /**

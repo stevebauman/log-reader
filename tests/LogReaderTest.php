@@ -1,10 +1,12 @@
 <?php
 
+namespace Stevebauman\LogReader\Tests;
+
 use Mockery as m;
 use Illuminate\Support\Facades\Cache;
 use Stevebauman\LogReader\LogReader;
 
-class LogReaderTest extends PHPUnit_Framework_TestCase
+class LogReaderTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * Stores the mocked app instance
@@ -145,6 +147,13 @@ class LogReaderTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($entry, $entry->markRead());
     }
 
+    public function testMarkAllRead()
+    {
+        $marked = $this->logReader->markRead();
+
+        $this->assertEquals(8, $marked);
+    }
+
     public function testDelete()
     {
         $entry = $this->logReader->get()->first();
@@ -154,6 +163,13 @@ class LogReaderTest extends PHPUnit_Framework_TestCase
         $entries = $this->logReader->get();
 
         $this->assertEquals(7, $entries->count());
+    }
+
+    public function testDeleteAll()
+    {
+        $deleted = $this->logReader->delete();
+
+        $this->assertEquals(8, $deleted);
     }
 
     public function testLevelGet()
@@ -189,4 +205,12 @@ class LogReaderTest extends PHPUnit_Framework_TestCase
 
         $this->logReader->get();
     }
+}
+
+/*
+ * Override Laravel storage path function for testing
+ */
+function storage_path()
+{
+    return '';
 }

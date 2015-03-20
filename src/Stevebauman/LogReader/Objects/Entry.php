@@ -98,13 +98,15 @@ class Entry
      */
     public function delete()
     {
-        $contents = file_get_contents($this->getFilePath());
+        $filePath = $this->getFilePath();
+
+        $contents = file_get_contents($filePath);
 
         $contents = str_replace($this->header.$this->stack, '', $contents);
 
-        if(file_put_contents($this->getFilePath(), $contents)) return true;
+        file_put_contents($filePath, $contents);
 
-        return false;
+        return true;
     }
 
     /**
