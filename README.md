@@ -80,7 +80,9 @@ This will cache the entry, and exclude it from any future results.
 
 ##### Marking all entries as read:
 
-    LogReader::markRead();
+    $marked = LogReader::markRead();
+    
+    echo $marked; // Returns integer of how many entries were marked
     
 This will cache all the entries and exclude them from future results.
 
@@ -92,7 +94,9 @@ This will remove the entire entry from the log file, but keep all other entries 
 
 ##### Deleting all log entries:
 
-    LogReader::delete();
+    $deleted = LogReader::delete();
+    
+    echo $deleted; // Returns integer of how many entries were deleted
     
 This will remove all entries in all log files. It will not delete the files however.
 

@@ -2,8 +2,8 @@
 
 namespace Stevebauman\LogReader;
 
+use Stevebauman\LogReader\Exceptions\InvalidTimestampException;
 use Stevebauman\LogReader\Exceptions\UnableToRetrieveLogFilesException;
-use Stevebauman\LogReader\LogReaderServiceProvider;
 use Stevebauman\LogReader\Objects\Entry;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Paginator;
@@ -378,12 +378,20 @@ class LogReader
     }
 
     /**
-     * Sets the date property to search the log files for
+     * Sets the date property to filter log results
      *
-     * @param $date
+     * @param int $date
+     * @throws InvalidTimestampException
      */
     private function setDate($date)
     {
+        if( ! $this->isValidTimeStamp($date))
+        {
+            $message = "Inserted date: $date is not a valid timestamp.";
+
+            throw new InvalidTimestampException($message);
+        }
+
         $this->date = date('Y-m-d', $date);
     }
 
@@ -395,6 +403,17 @@ class LogReader
     private function setIncludeRead($bool = false)
     {
         $this->includeRead = $bool;
+    }
+
+    /**
+     * Returns true/false if the inserted timestamp is valid
+     *
+     * @param $timestamp
+     * @return bool
+     */
+    private function isValidTimestamp($timestamp)
+    {
+        return is_numeric($timestamp);
     }
 
     /**

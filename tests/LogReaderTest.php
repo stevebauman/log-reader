@@ -6,6 +6,14 @@ use Mockery as m;
 use Illuminate\Support\Facades\Cache;
 use Stevebauman\LogReader\LogReader;
 
+/*
+ * Override Laravel's storage path function
+ */
+function storage_path()
+{
+    return '';
+}
+
 class LogReaderTest extends \PHPUnit_Framework_TestCase
 {
     /**
@@ -205,12 +213,11 @@ class LogReaderTest extends \PHPUnit_Framework_TestCase
 
         $this->logReader->get();
     }
-}
 
-/*
- * Override Laravel storage path function for testing
- */
-function storage_path()
-{
-    return '';
+    public function testDateFailure()
+    {
+        $this->setExpectedException('Stevebauman\LogReader\Exceptions\InvalidTimestampException');
+
+        $this->logReader->date('test')->get();
+    }
 }
