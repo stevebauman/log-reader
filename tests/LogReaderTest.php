@@ -48,8 +48,6 @@ class LogReaderTest extends \PHPUnit_Framework_TestCase
     {
         parent::setUp();
 
-        $this->setApp($this->mockApplication());
-
         $this->setPaths();
 
         $this->setLogReader();
@@ -57,8 +55,6 @@ class LogReaderTest extends \PHPUnit_Framework_TestCase
         $this->insertStubsOnSingleLog();
 
         $this->insertStubsOnDateLog();
-
-        $this->app->shouldReceive('offsetGet')->andReturn($this->app);
     }
 
     protected function tearDown()
@@ -70,26 +66,8 @@ class LogReaderTest extends \PHPUnit_Framework_TestCase
         $this->removeStubsOnDateLog();
     }
 
-    protected function mockApplication()
-    {
-        return m::mock('Illuminate\Foundation\Application');
-    }
-
-    protected function setApp($app)
-    {
-        $this->app = $app;
-
-        \Illuminate\Support\Facades\Facade::setFacadeApplication($this->app);
-    }
-
     protected function setLogReader()
     {
-        /*
-         * Log reader uses the `storage_path()` on construct,
-         * this mocks that function
-         */
-        $this->app->shouldReceive('make')->once()->andReturn(__DIR__ . DIRECTORY_SEPARATOR . 'stubs');
-
         $this->logReader = new LogReader;
 
         $this->logReader->setLogPath($this->stubsLogPath);
@@ -128,7 +106,7 @@ class LogReaderTest extends \PHPUnit_Framework_TestCase
 
     public function testGet()
     {
-        $this->app->shouldReceive('has')->andReturn(false);
+        Cache::shouldReceive('has')->andReturn(false);
 
         $entries = $this->logReader->get();
 
@@ -138,8 +116,6 @@ class LogReaderTest extends \PHPUnit_Framework_TestCase
 
     public function testFind()
     {
-        $this->app->shouldReceive('has')->andReturn(false);
-
         $entry = $this->logReader->get()->first();
 
         $foundEntry = $this->logReader->find($entry->id);
