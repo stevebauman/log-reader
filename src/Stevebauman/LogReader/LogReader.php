@@ -2,6 +2,7 @@
 
 namespace Stevebauman\LogReader;
 
+use Stevebauman\LogReader\Exceptions\UnableToRetrieveLogFilesException;
 use Stevebauman\LogReader\Objects\Entry;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Paginator;
@@ -76,49 +77,59 @@ class LogReader
      * Returns a Laravel collection of log entries
      *
      * @return Collection
+     * @throws UnableToRetrieveLogFilesException
      */
     public function get()
     {
         $entries = array();
 
-        /*
-         * Retrieve the log files
-         */
-        foreach($this->getLogFiles() as $log)
+        $files = $this->getLogFiles();
+
+        if(is_array($files))
         {
             /*
-             * Set the current log path for easy manipulation
-             * of the file if needed
-             */
-            $this->setCurrentLogPath($log['path']);
-
-            /*
-             * Parse the log into an array of entries, passing in the level
-             * so it can be filtered
-             */
-            $parsedLog = $this->parseLog($log['contents'], $this->getLevel());
-
-            /*
-             * Create a new Entry object for each parsed log entry
-             */
-            foreach($parsedLog as $entry)
+        * Retrieve the log files
+        */
+            foreach($this->getLogFiles() as $log)
             {
-                $newEntry = new Entry($entry);
+                /*
+                 * Set the current log path for easy manipulation
+                 * of the file if needed
+                 */
+                $this->setCurrentLogPath($log['path']);
 
                 /*
-                 * Check if the entry has already been read,
-                 * if it is continue
+                 * Parse the log into an array of entries, passing in the level
+                 * so it can be filtered
                  */
-                if($newEntry->isRead()) continue;
+                $parsedLog = $this->parseLog($log['contents'], $this->getLevel());
 
-                $entries[] = $newEntry;
+                /*
+                 * Create a new Entry object for each parsed log entry
+                 */
+                foreach($parsedLog as $entry)
+                {
+                    $newEntry = new Entry($entry);
+
+                    /*
+                     * Check if the entry has already been read,
+                     * if it is continue
+                     */
+                    if($newEntry->isRead()) continue;
+
+                    $entries[] = $newEntry;
+                }
             }
+
+            /*
+             * Return a new Collection of entries
+             */
+            return new Collection($entries);
         }
 
-        /*
-         * Return a new Collection of entries
-         */
-        return new Collection($entries);
+        $message = "Unable to retrieve files from path: " . $this->getLogPath();
+
+        throw new UnableToRetrieveLogFilesException($message);
     }
 
     /**
@@ -272,6 +283,16 @@ class LogReader
     }
 
     /**
+     * Retrieves the path property
+     *
+     * @return string
+     */
+    public function getLogPath()
+    {
+        return $this->path;
+    }
+
+    /**
      * Sets the directory path to retrieve the
      * log files from
      *
@@ -409,31 +430,38 @@ class LogReader
 
         $files = $this->getLogFileList();
 
-        $count = 0;
-
-        foreach($files as $file)
+        if(is_array($files))
         {
-            $data[$count]['contents'] = file_get_contents($file);
-            $data[$count]['path'] = $file;
-            $count++;
+            $count = 0;
+
+            foreach($files as $file)
+            {
+                $data[$count]['contents'] = file_get_contents($file);
+                $data[$count]['path'] = $file;
+                $count++;
+            }
+
+            return $data;
         }
 
-        return $data;
+        return false;
     }
 
     /**
      * Returns an array of log file paths
      *
-     * @return array
+     * @return bool|array
      */
     private function getLogFileList()
     {
-        if(is_dir($this->path))
+        $path = $this->getLogPath();
+
+        if(is_dir($path))
         {
             /*
              * Matches all files in the log directory with the type of '.log'
              */
-            $logPath = sprintf('%s%slaravel.log', $this->path, DIRECTORY_SEPARATOR);
+            $logPath = sprintf('%s%slaravel.log', $path, DIRECTORY_SEPARATOR);
 
             if($this->getDate() != 'none')
             {
@@ -441,10 +469,12 @@ class LogReader
                  * Matches files in the log directory with the file name
                  * of 'laravel-YYYY-MM-DD.log' if a date is supplied
                  */
-                $logPath = sprintf('%s%slaravel-%s.log', $this->path, DIRECTORY_SEPARATOR, $this->getDate());
+                $logPath = sprintf('%s%slaravel-%s.log', $path, DIRECTORY_SEPARATOR, $this->getDate());
             }
 
             return glob($logPath);
         }
+
+        return false;
     }
 }

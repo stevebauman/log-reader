@@ -180,4 +180,13 @@ class LogReaderTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals(1, $entries->count());
     }
+
+    public function testSetLogPathFailure()
+    {
+        $this->logReader->setLogPath('test');
+
+        $this->setExpectedException('Stevebauman\LogReader\Exceptions\UnableToRetrieveLogFilesException');
+
+        $this->logReader->get();
+    }
 }
