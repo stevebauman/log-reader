@@ -31,10 +31,7 @@ class LogReaderServiceProvider extends ServiceProvider
          * The package method was removed on laravel 5, so we know
          * if it does not exist, we're using L5.
          */
-        if(!method_exists($this, 'package'))
-        {
-            $this::$laravelVersion = 5;
-        }
+        if(!method_exists($this, 'package')) $this::$laravelVersion = 5;
     }
 
 	/**
