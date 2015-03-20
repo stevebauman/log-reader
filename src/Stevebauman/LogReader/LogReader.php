@@ -87,10 +87,10 @@ class LogReader
 
         if(is_array($files))
         {
-            /*
-        * Retrieve the log files
-        */
-            foreach($this->getLogFiles() as $log)
+            /**
+             * Retrieve the log files
+             */
+            foreach($files as $log)
             {
                 /*
                  * Set the current log path for easy manipulation
