@@ -98,7 +98,19 @@ This will remove all entries in all log files. It will not delete the files howe
 ##### Getting log entries by level
 
     LogReader::level('error')->get();
+
+##### Filter by date
+
+If you're running Laravel 4.2, you must enable daily files to filter your log results by date. You can do so here:
+
+http://laravel.com/docs/4.2/errors#configuration
+
+If you have it enabled or you're running Laravel 5:
+
+    $date = strtotime('2015-03-19');
     
+    $entries = LogReader::date($date)->get();
+
 ##### Paginate your results
 
     LogReader::paginate(25);
@@ -124,15 +136,4 @@ You can also combine functions with the pagination like so:
     $date = strtotime('2015-03-19');
 
     $entries = LogReader::level('error')->date($date)->paginate(25);
-
-##### Filter by date
-
-If you're running Laravel 4.2, you must enable daily files to filter your log results by date. You can do so here:
-
-http://laravel.com/docs/4.2/errors#configuration
-
-If you have it enabled or you're running Laravel 5:
-
-    $date = strtotime('2015-03-19');
     
-    $entries = LogReader::date($date)->get();
