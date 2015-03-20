@@ -105,7 +105,7 @@ If you're running Laravel 4.2, you must enable daily files to filter your log re
 
 http://laravel.com/docs/4.2/errors#configuration
 
-If you have it enabled or you're running Laravel 5:
+If you have it enabled or you're running Laravel 5 (Laravel 5 has this enabled by default):
 
     $date = strtotime('2015-03-19');
     
