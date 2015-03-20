@@ -146,6 +146,7 @@ class LogReaderTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals($foundEntry->id, $entry->id);
         $this->assertEquals($foundEntry->header, $entry->header);
+        $this->assertEquals($foundEntry->date, $entry->date);
     }
 
     public function testMarkRead()

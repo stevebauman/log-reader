@@ -39,6 +39,13 @@ class Entry
     public $header = '';
 
     /**
+     * The entry's date string
+     *
+     * @var string
+     */
+    public $date = '';
+
+    /**
      * The entry's stack string
      *
      * @var string
@@ -188,6 +195,22 @@ class Entry
     }
 
     /**
+     * Sets the entry's date property by the
+     * inserted header
+     *
+     * @param string $header
+     */
+    private function setDateByHeader($header = '')
+    {
+        preg_match_all("/\[([^\]]*)\]/", $header, $matches);
+
+        if(is_array($matches) && array_key_exists(1, $matches))
+        {
+            $this->date = $matches[1][0];
+        }
+    }
+
+    /**
      * Sets the entry's level property
      *
      * @param $stack
@@ -239,6 +262,7 @@ class Entry
         $this->setLevel($this->getAttribute('level'));
         $this->setHeader($this->getAttribute('header'));
         $this->setStack($this->getAttribute('stack'));
+        $this->setDateByHeader($this->getAttribute('header'));
         $this->setId($this->makeId());
     }
 }

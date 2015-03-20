@@ -10,6 +10,15 @@
          stopOnFailure="false"
          syntaxCheck="false"
 >
+    <filter>
+        <whitelist>
+            <directory>src/Stevebauman/LogReader</directory>
+            <exclude>
+                <file>src/Stevebauman/LogReader/LogReaderServiceProvider.php</file>
+            </exclude>
+        </whitelist>
+    </filter>
+
     <testsuites>
         <testsuite name="Package Test Suite">
             <directory suffix=".php">./tests/</directory>
