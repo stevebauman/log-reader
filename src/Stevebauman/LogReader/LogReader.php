@@ -433,7 +433,7 @@ class LogReader
             /*
              * Matches all files in the log directory with the type of '.log'
              */
-            $logPath = sprintf('%s%s*.log', $this->path, DIRECTORY_SEPARATOR);
+            $logPath = sprintf('%s%slaravel.log', $this->path, DIRECTORY_SEPARATOR);
 
             if($this->getDate() != 'none')
             {
@@ -443,7 +443,7 @@ class LogReader
                  */
                 $logPath = sprintf('%s%slaravel-%s.log', $this->path, DIRECTORY_SEPARATOR, $this->getDate());
             }
-            
+
             return glob($logPath);
         }
     }

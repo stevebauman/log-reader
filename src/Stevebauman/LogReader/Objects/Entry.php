@@ -72,12 +72,10 @@ class Entry
      */
     public function markRead()
     {
-        $entry = Cache::rememberForever($this->makeCacheKey(), function()
+        return Cache::rememberForever($this->makeCacheKey(), function()
         {
             return $this;
         });
-
-        return $entry;
     }
 
     /**
@@ -164,9 +162,7 @@ class Entry
      */
     private function makeCacheKey()
     {
-        $key = sprintf('%s.%s', 'log-reader', $this->header);
-
-        return gzcompress($key);
+        return $this->id;
     }
 
     /**

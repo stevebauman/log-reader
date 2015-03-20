@@ -1,9 +1,174 @@
 <?php
 
-class LogReaderTest extends \PHPUnit_Framework_TestCase
-{
-    public function testRead()
-    {
+use Mockery as m;
+use Illuminate\Support\Facades\Cache;
+use Stevebauman\LogReader\LogReader;
 
+class LogReaderTest extends PHPUnit_Framework_TestCase
+{
+    /**
+     * Stores the mocked app instance
+     *
+     * @var
+     */
+    protected $app;
+
+    /**
+     * Stores the current log reader instance
+     *
+     * @var LogReader
+     */
+    protected $logReader;
+
+    /**
+     * Stores the stubs directory path
+     *
+     * @var string
+     */
+    protected $stubsPath = '';
+
+    /**
+     * Stores the stubs log path
+     *
+     * @var string
+     */
+    protected $stubsLogPath = '';
+
+    protected function setUp()
+    {
+        parent::setUp();
+
+        $this->setApp($this->mockApplication());
+
+        $this->setLogReader();
+
+        $this->setPaths();
+
+        $this->insertStubsOnSingleLog();
+
+        $this->insertStubsOnDateLog();
+
+        $this->app->shouldReceive('offsetGet')->andReturn($this->app);
+    }
+
+    protected function tearDown()
+    {
+        parent::tearDown();
+
+        $this->removeStubsOnSingleLog();
+
+        $this->removeStubsOnDateLog();
+    }
+
+    protected function mockApplication()
+    {
+        return m::mock('Illuminate\Foundation\Application');
+    }
+
+    protected function setApp($app)
+    {
+        $this->app = $app;
+
+        \Illuminate\Support\Facades\Facade::setFacadeApplication($this->app);
+    }
+
+    protected function setLogReader()
+    {
+        /*
+         * Log reader uses the `storage_path()` on construct,
+         * this mocks that function
+         */
+        $this->app->shouldReceive('make')->once()->andReturn(__DIR__ . DIRECTORY_SEPARATOR . 'stubs');
+
+        $this->logReader = new LogReader;
+    }
+
+    protected function setPaths()
+    {
+        $this->stubsPath = __DIR__ . DIRECTORY_SEPARATOR . 'stubs' . DIRECTORY_SEPARATOR;
+
+        $this->stubsLogPath = $this->stubsPath . DIRECTORY_SEPARATOR . 'logs' . DIRECTORY_SEPARATOR;
+    }
+
+    protected function insertStubsOnSingleLog()
+    {
+        $readyContent = file_get_contents($this->stubsPath.'ready-log.log');
+
+        file_put_contents($this->stubsLogPath.'laravel.log', $readyContent);
+    }
+
+    protected function insertStubsOnDateLog()
+    {
+        $readyContent = file_get_contents($this->stubsPath.'ready-log.log');
+
+        file_put_contents($this->stubsLogPath.'laravel-2015-03-20.log', $readyContent);
+    }
+
+    protected function removeStubsOnSingleLog()
+    {
+        file_put_contents($this->stubsLogPath.'laravel.log', '');
+    }
+
+    protected function removeStubsOnDateLog()
+    {
+        file_put_contents($this->stubsLogPath.'laravel-2015-03-20.log', '');
+    }
+
+    public function testGet()
+    {
+        $this->app->shouldReceive('has')->andReturn(false);
+
+        $entries = $this->logReader->get();
+
+        $this->assertEquals(8, $entries->count());
+        $this->assertInstanceOf('Illuminate\Support\Collection', $entries);
+    }
+
+    public function testFind()
+    {
+        $this->app->shouldReceive('has')->andReturn(false);
+
+        $entry = $this->logReader->get()->first();
+
+        $foundEntry = $this->logReader->find($entry->id);
+
+        $this->assertEquals($foundEntry->id, $entry->id);
+        $this->assertEquals($foundEntry->header, $entry->header);
+    }
+
+    public function testMarkRead()
+    {
+        $entry = $this->logReader->get()->first();
+
+        Cache::shouldReceive('rememberForever')->andReturn($entry);
+
+        $this->assertEquals($entry, $entry->markRead());
+    }
+
+    public function testDelete()
+    {
+        $entry = $this->logReader->get()->first();
+
+        $entry->delete();
+
+        $entries = $this->logReader->get();
+
+        $this->assertEquals(7, $entries->count());
+    }
+
+    public function testLevelGet()
+    {
+        $entries = $this->logReader->level('info')->get();
+
+        $this->assertEquals(1, $entries->count());
+    }
+
+    public function testDateGet()
+    {
+        $date = strtotime('2015-03-20');
+
+        $entries = $this->logReader->date($date)->get();
+
+        $this->assertEquals(8, $entries->count());
     }
 }
