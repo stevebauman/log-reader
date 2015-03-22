@@ -2,7 +2,7 @@
 (https://raw.githubusercontent.com/stevebauman/log-reader/master/log-reader-banner.jpg)
 
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/stevebauman/log-reader/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/stevebauman/log-reader/?branch=master)
-[![Build Status](https://travis-ci.org/stevebauman/log-reader.svg?branch=1.0.0)](https://travis-ci.org/stevebauman/log-reader)
+[![Build Status](https://travis-ci.org/stevebauman/log-reader.svg?branch=master)](https://travis-ci.org/stevebauman/log-reader)
 [![Latest Stable Version](https://poser.pugx.org/stevebauman/log-reader/v/stable.svg)](https://packagist.org/packages/stevebauman/log-reader)
 [![Total Downloads](https://poser.pugx.org/stevebauman/log-reader/downloads.svg)](https://packagist.org/packages/stevebauman/log-reader)
 [![License](https://poser.pugx.org/stevebauman/log-reader/license.svg)](https://packagist.org/packages/stevebauman/log-reader)
