@@ -4,7 +4,6 @@ namespace Stevebauman\LogReader;
 
 use Mockery as m;
 use Illuminate\Support\Facades\Cache;
-use Stevebauman\LogReader\LogReader;
 
 /*
  * Override Laravel's storage path function
