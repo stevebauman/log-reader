@@ -233,6 +233,7 @@ class LogReader
      *
      * @param $date
      * @return $this
+     * @throws InvalidTimestampException
      */
     public function date($date)
     {

@@ -66,18 +66,18 @@ class LogReaderTest extends \PHPUnit_Framework_TestCase
         $this->removeStubsOnDateLog();
     }
 
-    protected function setLogReader()
-    {
-        $this->logReader = new LogReader;
-
-        $this->logReader->setLogPath($this->stubsLogPath);
-    }
-
     protected function setPaths()
     {
         $this->stubsPath = __DIR__ . DIRECTORY_SEPARATOR . 'stubs' . DIRECTORY_SEPARATOR;
 
         $this->stubsLogPath = $this->stubsPath . DIRECTORY_SEPARATOR . 'logs' . DIRECTORY_SEPARATOR;
+    }
+
+    protected function setLogReader()
+    {
+        $this->logReader = new LogReader;
+
+        $this->logReader->setLogPath($this->stubsLogPath);
     }
 
     protected function insertStubsOnSingleLog()

@@ -151,3 +151,29 @@ You can also combine functions with the pagination like so:
 
     $entries = LogReader::level('error')->date($date)->paginate(25);
     
+##### Setting your own log path
+
+By default LogReader uses the laravel helper `storage_path('logs')` as the log directory. If you need this changed just
+set a different path using:
+
+    LogReader::setLogPath('logs');
+
+## Exceptions
+
+##### InvalidTimestampException
+
+If you've inserted a non-valid timestamp into the `date($date)` function, then you will receive an `InvalidTimestampException`
+(full namespace is `Stevebauman\LogReader\Exceptions\InvalidTimestampException`).
+
+For example:
+
+    $entries = LogReader::date('10a'); // Throws InvalidTimestampException
+
+##### UnableToRetrieveLogFilesException
+
+If you've set your log path manually and log files do not exist in the given directory, you will receive
+an `UnableToRetrieveLogFilesException` (full namespace is `Stevebauman\LogReader\Exceptions\UnableToRetrieveLogFilesException`).
+
+For example:
+
+    LogReader::setLogPath('testing'); // Throws UnableToRetrieveLogFilesException
