@@ -99,7 +99,11 @@ This will cache all the entries and exclude them from future results.
 
     LogReader::find($id)->delete();
     
+    // Or if you've marked the entry as read
+    LogReader::includeRead()->find($id)->delete();
+    
 This will remove the entire entry from the log file, but keep all other entries in-tack.
+
 
 ##### Deleting all log entries:
 
