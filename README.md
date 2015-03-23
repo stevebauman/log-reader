@@ -181,3 +181,7 @@ an `UnableToRetrieveLogFilesException` (full namespace is `Stevebauman\LogReader
 For example:
 
     LogReader::setLogPath('testing'); // Throws UnableToRetrieveLogFilesException
+    
+## To Do
+
+- Ordering entries by date / level

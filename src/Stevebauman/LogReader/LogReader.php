@@ -172,7 +172,7 @@ class LogReader
 
         $count = 0;
 
-        foreach($entries as $entry) if($entry->markRead()) $count++;
+        foreach($entries as $entry) if($entry->markRead()) ++$count;
 
         return $count;
     }
@@ -418,8 +418,8 @@ class LogReader
     }
 
     /**
-     * Parses the content of the file separating the errors into
-     * a single array
+     * Parses the content of the file separating
+     * the errors into a single array
      *
      * @param $content
      * @param string $allowedLevel
@@ -524,6 +524,7 @@ class LogReader
                  * of 'laravel-YYYY-MM-DD.log' if a date is supplied
                  */
                 $logPath = sprintf('%s%slaravel-%s.log', $path, DIRECTORY_SEPARATOR, $this->getDate());
+
             } elseif(LogReaderServiceProvider::$laravelVersion === 5)
             {
                 /*
