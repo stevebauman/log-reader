@@ -183,6 +183,62 @@ class LogReaderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(1, $entries->count());
     }
 
+    public function testOrderByDateGetDesc()
+    {
+        $entries = $this->logReader->orderBy('date', 'desc')->get();
+
+        $levelStr = '';
+
+        foreach($entries as $entry)
+        {
+            $levelStr .= $entry->level;
+        }
+
+        $this->assertEquals('debugnoticealertcriticalemergencyerrorwarninginfo', $levelStr);
+    }
+
+    public function testOrderByDateGetAsc()
+    {
+        $entries = $this->logReader->orderBy('date', 'asc')->get();
+
+        $levelStr = '';
+
+        foreach($entries as $entry)
+        {
+            $levelStr .= $entry->level;
+        }
+
+        $this->assertEquals('infowarningerroremergencycriticalalertnoticedebug', $levelStr);
+    }
+
+    public function testOrderByLevelGetDesc()
+    {
+        $entries = $this->logReader->orderBy('level', 'desc')->get();
+
+        $levelStr = '';
+
+        foreach($entries as $entry)
+        {
+            $levelStr .= $entry->level;
+        }
+
+        $this->assertEquals('warningnoticeinfoerroremergencydebugcriticalalert', $levelStr);
+    }
+
+    public function testOrderByLevelGetAsc()
+    {
+        $entries = $this->logReader->orderBy('level', 'asc')->get();
+
+        $levelStr = '';
+
+        foreach($entries as $entry)
+        {
+            $levelStr .= $entry->level;
+        }
+
+        $this->assertEquals('alertcriticaldebugemergencyerrorinfonoticewarning', $levelStr);
+    }
+
     public function testSetLogPathFailure()
     {
         $this->logReader->setLogPath('test');

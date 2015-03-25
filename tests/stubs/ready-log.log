@@ -2,31 +2,31 @@
 Stack trace:
 #0 [internal function]: Illuminate\Exception\Handler->handleShutdown()
 #1 {main} [] []
-[2015-03-20 09:30:35] production.WARNING: test [] []
+[2015-03-20 09:30:36] production.WARNING: test [] []
 Stack trace:
 #0 [internal function]: Illuminate\Exception\Handler->handleShutdown()
 #1 {main} [] []
-[2015-03-20 09:30:35] production.ERROR: test [] []
+[2015-03-20 09:30:37] production.ERROR: test [] []
 Stack trace:
 #0 [internal function]: Illuminate\Exception\Handler->handleShutdown()
 #1 {main} [] []
-[2015-03-20 09:30:35] production.EMERGENCY: test [] []
+[2015-03-20 09:30:38] production.EMERGENCY: test [] []
 Stack trace:
 #0 [internal function]: Illuminate\Exception\Handler->handleShutdown()
 #1 {main} [] []
-[2015-03-20 09:30:35] production.CRITICAL: test [] []
+[2015-03-20 09:30:39] production.CRITICAL: test [] []
 Stack trace:
 #0 [internal function]: Illuminate\Exception\Handler->handleShutdown()
 #1 {main} [] []
-[2015-03-20 09:30:35] production.ALERT: test [] []
+[2015-03-20 09:30:40] production.ALERT: test [] []
 Stack trace:
 #0 [internal function]: Illuminate\Exception\Handler->handleShutdown()
 #1 {main} [] []
-[2015-03-20 09:30:35] production.NOTICE: test [] []
+[2015-03-20 09:30:41] production.NOTICE: test [] []
 Stack trace:
 #0 [internal function]: Illuminate\Exception\Handler->handleShutdown()
 #1 {main} [] []
-[2015-03-20 09:30:35] production.DEBUG: test [] []
+[2015-03-20 09:30:42] production.DEBUG: test [] []
 Stack trace:
 #0 [internal function]: Illuminate\Exception\Handler->handleShutdown()
 #1 {main} [] []

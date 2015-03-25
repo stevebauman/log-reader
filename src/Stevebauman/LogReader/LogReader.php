@@ -30,11 +30,18 @@ class LogReader
     protected $currentLogPath = '';
 
     /**
+     * Stores the field to order the log entries in
+     *
+     * @var string
+     */
+    protected $orderByField = '';
+
+    /**
      * Stores the direction to order the log entries in
      *
      * @var string
      */
-    protected $orderBy = 'asc';
+    protected $orderByDirection = 'asc';
 
     /**
      * Stores the current level to sort the log entries
@@ -136,7 +143,7 @@ class LogReader
             /*
              * Return a new Collection of entries
              */
-            return new Collection($entries);
+            return $this->postCollectionModifiers(new Collection($entries));
         }
 
         $message = "Unable to retrieve files from path: " . $this->getLogPath();
@@ -257,24 +264,36 @@ class LogReader
     /**
      * Sets the direction to return the log entries in
      *
-     * @param $direction
+     * @param string $field
+     * @param string $direction
      * @return $this
      */
-    public function orderBy($direction)
+    public function orderBy($field, $direction = 'desc')
     {
-        $this->setOrderBy($direction);
+        $this->setOrderByField($field);
+        $this->setOrderByDirection($direction);
 
         return $this;
     }
 
     /**
-     * Retrieves the orderBy property
+     * Retrieves the orderByField property
      *
      * @return string
      */
-    public function getOrderBy()
+    public function getOrderByField()
     {
-        return $this->orderBy;
+        return $this->orderByField;
+    }
+
+    /**
+     * Retrieves the orderByDirection property
+     *
+     * @return string
+     */
+    public function getOrderByDirection()
+    {
+        return $this->orderByDirection;
     }
 
     /**
@@ -329,6 +348,48 @@ class LogReader
     }
 
     /**
+     * Modifies and returns the collection result if modifiers are set
+     * such as an orderBy
+     *
+     * @param Collection $collection
+     * @return Collection
+     */
+    private function postCollectionModifiers(Collection $collection)
+    {
+        if($this->getOrderByField() && $this->getOrderByDirection())
+        {
+            $collection = $this->processCollectionOrderBy($collection);
+        }
+
+        return $collection;
+    }
+
+    /**
+     * Modifies the collection to be sorted by the orderByField and
+     * orderByDirection properties
+     *
+     * @param Collection $collection
+     * @return $this|Collection
+     */
+    private function processCollectionOrderBy(Collection $collection)
+    {
+        $field = $this->getOrderByField();
+
+        $direction = $this->getOrderByDirection();
+
+        $desc = false;
+
+        if($direction === 'desc') $desc = true;
+
+        $collection->sortBy(function($entry) use ($field)
+        {
+            if(property_exists($entry, $field)) return $entry->{$field};
+        }, SORT_NATURAL, $desc);
+
+        return $collection;
+    }
+
+    /**
      * Returns the current page from the current input.
      * Used for pagination.
      *
@@ -355,15 +416,32 @@ class LogReader
     }
 
     /**
-     * Sets the orderBy property to the specified direction
+     * Sets the orderByField property to the specified field
      *
-     * @param $direction
+     * @param string $field
      */
-    private function setOrderBy($direction)
+    private function setOrderByField($field)
+    {
+        $field = strtolower($field);
+
+        $fields = array(
+            'date',
+            'level'
+        );
+
+        if(in_array($field, $fields)) $this->orderByField = $field;
+    }
+
+    /**
+     * Sets the orderByDirection property to the specified direction
+     *
+     * @param string $direction
+     */
+    private function setOrderByDirection($direction)
     {
         $direction = strtolower($direction);
 
-        if($direction == 'desc' || $direction == 'asc') $this->orderBy = $direction;
+        if($direction == 'desc' || $direction == 'asc') $this->orderByDirection = $direction;
     }
 
     /**

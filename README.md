@@ -117,6 +117,16 @@ This will remove all entries in all log files. It will not delete the files howe
 
     LogReader::level('error')->get();
 
+##### Ordering
+
+You can easily order your results as well using `orderBy($field, $direction = 'desc')`:
+
+    LogReader::orderBy('level')->get();
+    LogReader::orderBy('date', 'asc')->get();
+    
+    // Chaining example
+    LogReader::level('error')->orderBy('date', 'asc')->get();
+    
 ##### Filter by date
 
 If you're running Laravel 4.2, you must enable daily files to filter your log results by date. You can do so here:
@@ -181,7 +191,3 @@ an `UnableToRetrieveLogFilesException` (full namespace is `Stevebauman\LogReader
 For example:
 
     LogReader::setLogPath('testing'); // Throws UnableToRetrieveLogFilesException
-    
-## To Do
-
-- Ordering entries by date / level
