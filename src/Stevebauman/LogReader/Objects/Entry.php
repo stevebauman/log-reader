@@ -5,62 +5,61 @@ namespace Stevebauman\LogReader\Objects;
 use Illuminate\Support\Facades\Cache;
 
 /**
- * Class Entry
- * @package Stevebauman\LogReader\Objects
+ * Class Entry.
  */
 class Entry
 {
     /**
-     * The entry's ID
+     * The entry's ID.
      *
      * @var string
      */
     public $id = '';
 
     /**
-     * The entry's file path
+     * The entry's file path.
      *
      * @var string
      */
     public $filePath = '';
 
     /**
-     * The entry's level string
+     * The entry's level string.
      *
      * @var string
      */
     public $level = '';
 
     /**
-     * The entry's header string
+     * The entry's header string.
      *
      * @var string
      */
     public $header = '';
 
     /**
-     * The entry's date string
+     * The entry's date string.
      *
      * @var string
      */
     public $date = '';
 
     /**
-     * The entry's stack string
+     * The entry's stack string.
      *
      * @var string
      */
     public $stack = '';
 
     /**
-     * The entry's attributes
+     * The entry's attributes.
      *
      * @var array
      */
     protected $attributes = array();
 
     /**
-     * Constructs a new entry object with the specified attributes
+     * Constructs a new entry object with the specified attributes.
      *
      * @param array $attributes
      */
@@ -73,33 +72,34 @@ class Entry
 
     /**
      * Stores the entry in the cache so it is no longer shown
-     * in the log results
+     * in the log results.
      *
      * @return mixed
      */
     public function markRead()
     {
-        return Cache::rememberForever($this->makeCacheKey(), function()
-        {
+        return Cache::rememberForever($this->makeCacheKey(), function () {
             return $this;
         });
     }
 
     /**
      * Returns true/false depending if the entry
-     * has been marked read (exists inside the cache)
+     * has been marked read (exists inside the cache).
      *
      * @return bool
      */
     public function isRead()
     {
-        if(Cache::has($this->makeCacheKey())) return true;
+        if (Cache::has($this->makeCacheKey())) {
+            return true;
+        }
 
         return false;
     }
 
     /**
-     * Removes the current entry from the log file
+     * Removes the current entry from the log file.
      *
      * @return bool
      */
@@ -117,7 +117,7 @@ class Entry
     }
 
     /**
-     * Returns the current entry's file path
+     * Returns the current entry's file path.
      *
      * @return string
      */
@@ -128,22 +128,23 @@ class Entry
 
     /**
      * Retrieves an attribute by the specified key
-     * from the attributes array
+     * from the attributes array.
      *
      * @param $key
-     * @return null
      */
     public function getAttribute($key)
     {
         $attributes = $this->getAttributes();
 
-        if(array_key_exists($key, $attributes)) return $attributes[$key];
+        if (array_key_exists($key, $attributes)) {
+            return $attributes[$key];
+        }
 
-        return null;
+        return;
     }
 
     /**
-     * Returns a attributes array
+     * Returns a attributes array.
      *
      * @return array
      */
@@ -154,7 +155,7 @@ class Entry
 
     /**
      * Returns a compressed entry header suitable to
-     * be used as the entry's ID
+     * be used as the entry's ID.
      *
      * @return string
      */
@@ -165,7 +166,7 @@ class Entry
 
     /**
      * Returns a key string for storing the entry
-     * inside the cache
+     * inside the cache.
      *
      * @return string
      */
@@ -175,28 +176,32 @@ class Entry
     }
 
     /**
-     * Sets the entry's filePath property
+     * Sets the entry's filePath property.
      *
      * @param $path
      */
     private function setFilePath($path = null)
     {
-        if($path) $this->filePath = $path;
+        if ($path) {
+            $this->filePath = $path;
+        }
     }
 
     /**
-     * Sets the entry's level property
+     * Sets the entry's level property.
      *
      * @param $header
      */
     private function setHeader($header = null)
     {
-        if($header) $this->header = $header;
+        if ($header) {
+            $this->header = $header;
+        }
     }
 
     /**
      * Sets the entry's date property by the
-     * inserted header
+     * inserted header.
      *
      * @param string $header
      */
@@ -204,34 +209,37 @@ class Entry
     {
         preg_match_all("/\[([^\]]*)\]/", $header, $matches);
 
-        if(is_array($matches) && array_key_exists(1, $matches))
-        {
+        if (is_array($matches) && array_key_exists(1, $matches)) {
             $this->date = $matches[1][0];
         }
     }
 
     /**
-     * Sets the entry's level property
+     * Sets the entry's level property.
      *
      * @param $stack
      */
     private function setStack($stack = null)
     {
-        if($stack) $this->stack = $stack;
+        if ($stack) {
+            $this->stack = $stack;
+        }
     }
 
     /**
-     * Sets the entry's level property
+     * Sets the entry's level property.
      *
      * @param $level
      */
     private function setLevel($level = null)
     {
-        if($level) $this->level = $level;
+        if ($level) {
+            $this->level = $level;
+        }
     }
 
     /**
-     * Sets the entry's ID property
+     * Sets the entry's ID property.
      *
      * @param $id
      */
@@ -241,20 +249,20 @@ class Entry
     }
 
     /**
-     * Sets the attributes property
+     * Sets the attributes property.
      *
      * @param array $attributes
      */
     private function setAttributes($attributes = array())
     {
-        if(is_array($attributes)) $this->attributes = $attributes;
+        if (is_array($attributes)) {
+            $this->attributes = $attributes;
+        }
     }
 
     /**
      * Assigns the valid keys in the attributes array
-     * to the properties in the entry
-     *
-     * @return void
+     * to the properties in the entry.
      */
     private function assignAttributes()
     {

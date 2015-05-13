@@ -3,7 +3,8 @@
 namespace Stevebauman\LogReader\Exceptions;
 
 /**
- * Class UnableToRetrieveLogFilesException
- * @package Stevebauman\LogReader\Exceptions
+ * Class UnableToRetrieveLogFilesException.
  */
-class UnableToRetrieveLogFilesException extends \Exception {}
+class UnableToRetrieveLogFilesException extends \Exception
+{
+}

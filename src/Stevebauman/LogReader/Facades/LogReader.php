@@ -5,12 +5,14 @@ namespace Stevebauman\LogReader\Facades;
 use Illuminate\Support\Facades\Facade;
 
 /**
- * The LogReader facade
+ * The LogReader facade.
  *
  * Class LogReader
- * @package Stevebauman\LogReader\Facades
  */
 class LogReader extends Facade
 {
-    protected static function getFacadeAccessor() { return 'log-reader'; }
+    protected static function getFacadeAccessor()
+    {
+        return 'log-reader';
+    }
 }

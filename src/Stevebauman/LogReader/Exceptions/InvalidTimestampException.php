@@ -3,7 +3,8 @@
 namespace Stevebauman\LogReader\Exceptions;
 
 /**
- * Class InvalidTimestampException
- * @package Stevebauman\LogReader\Exceptions
+ * Class InvalidTimestampException.
  */
-class InvalidTimestampException extends \Exception {}
+class InvalidTimestampException extends \Exception
+{
+}

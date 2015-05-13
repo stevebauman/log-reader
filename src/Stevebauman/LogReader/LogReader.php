@@ -10,48 +10,47 @@ use Illuminate\Support\Facades\Paginator;
 use Illuminate\Support\Collection;
 
 /**
- * Class LogReader
- * @package Stevebauman\LogReader
+ * Class LogReader.
  */
 class LogReader
 {
     /**
-     * The log file path
+     * The log file path.
      *
      * @var string
      */
     protected $path = '';
 
     /**
-     * The current log file path
+     * The current log file path.
      *
      * @var string
      */
     protected $currentLogPath = '';
 
     /**
-     * Stores the field to order the log entries in
+     * Stores the field to order the log entries in.
      *
      * @var string
      */
     protected $orderByField = '';
 
     /**
-     * Stores the direction to order the log entries in
+     * Stores the direction to order the log entries in.
      *
      * @var string
      */
     protected $orderByDirection = 'asc';
 
     /**
-     * Stores the current level to sort the log entries
+     * Stores the current level to sort the log entries.
      *
      * @var string
      */
     protected $level = 'all';
 
     /**
-     * Stores the date to search log files for
+     * Stores the date to search log files for.
      *
      * @var string
      */
@@ -59,14 +58,14 @@ class LogReader
 
     /**
      * Stores the bool whether or not to return
-     * read entries
+     * read entries.
      *
      * @var bool
      */
     protected $includeRead = false;
 
     /**
-     * The log levels
+     * The log levels.
      *
      * @var array
      */
@@ -82,7 +81,7 @@ class LogReader
     );
 
     /**
-     * Construct a new instance and set the path of the log entries
+     * Construct a new instance and set the path of the log entries.
      */
     public function __construct()
     {
@@ -90,9 +89,10 @@ class LogReader
     }
 
     /**
-     * Returns a Laravel collection of log entries
+     * Returns a Laravel collection of log entries.
      *
      * @return Collection
+     *
      * @throws UnableToRetrieveLogFilesException
      */
     public function get()
@@ -101,13 +101,11 @@ class LogReader
 
         $files = $this->getLogFiles();
 
-        if(is_array($files))
-        {
-            /**
+        if (is_array($files)) {
+            /*
              * Retrieve the log files
              */
-            foreach($files as $log)
-            {
+            foreach ($files as $log) {
                 /*
                  * Set the current log path for easy manipulation
                  * of the file if needed
@@ -123,8 +121,7 @@ class LogReader
                 /*
                  * Create a new Entry object for each parsed log entry
                  */
-                foreach($parsedLog as $entry)
-                {
+                foreach ($parsedLog as $entry) {
                     $newEntry = new Entry($entry);
 
                     /*
@@ -134,7 +131,9 @@ class LogReader
                      * If includeRead is false, and the entry is read,
                      * then continue processing.
                      */
-                    if( ! $this->includeRead && $newEntry->isRead()) continue;
+                    if (!$this->includeRead && $newEntry->isRead()) {
+                        continue;
+                    }
 
                     $entries[] = $newEntry;
                 }
@@ -146,22 +145,24 @@ class LogReader
             return $this->postCollectionModifiers(new Collection($entries));
         }
 
-        $message = "Unable to retrieve files from path: " . $this->getLogPath();
+        $message = 'Unable to retrieve files from path: '.$this->getLogPath();
 
         throw new UnableToRetrieveLogFilesException($message);
     }
 
     /**
-     * Finds a logged error by it's ID
+     * Finds a logged error by it's ID.
      *
      * @param string $id
+     *
      * @return mixed|null
      */
     public function find($id = '')
     {
-        $entries = $this->get()->filter(function($entry) use($id)
-        {
-            if($entry->id === $id) return true;
+        $entries = $this->get()->filter(function ($entry) use ($id) {
+            if ($entry->id === $id) {
+                return true;
+            }
         });
 
         return $entries->first();
@@ -179,7 +180,11 @@ class LogReader
 
         $count = 0;
 
-        foreach($entries as $entry) if($entry->markRead()) ++$count;
+        foreach ($entries as $entry) {
+            if ($entry->markRead()) {
+                ++$count;
+            }
+        }
 
         return $count;
     }
@@ -196,15 +201,20 @@ class LogReader
 
         $count = 0;
 
-        foreach($entries as $entry) if($entry->delete()) ++$count;
+        foreach ($entries as $entry) {
+            if ($entry->delete()) {
+                ++$count;
+            }
+        }
 
         return $count;
     }
 
     /**
-     * Paginates the returned log entries
+     * Paginates the returned log entries.
      *
      * @param int $perPage
+     *
      * @return mixed
      */
     public function paginate($perPage = 25)
@@ -223,9 +233,10 @@ class LogReader
     }
 
     /**
-     * Sets the level to sort the log entries by
+     * Sets the level to sort the log entries by.
      *
      * @param $level
+     *
      * @return $this
      */
     public function level($level)
@@ -236,10 +247,12 @@ class LogReader
     }
 
     /**
-     * Sets the date to sort the log entries by
+     * Sets the date to sort the log entries by.
      *
      * @param $date
+     *
      * @return $this
+     *
      * @throws InvalidTimestampException
      */
     public function date($date)
@@ -250,7 +263,7 @@ class LogReader
     }
 
     /**
-     * Includes read entries in the log results
+     * Includes read entries in the log results.
      *
      * @return $this
      */
@@ -262,10 +275,11 @@ class LogReader
     }
 
     /**
-     * Sets the direction to return the log entries in
+     * Sets the direction to return the log entries in.
      *
      * @param string $field
      * @param string $direction
+     *
      * @return $this
      */
     public function orderBy($field, $direction = 'desc')
@@ -277,7 +291,7 @@ class LogReader
     }
 
     /**
-     * Retrieves the orderByField property
+     * Retrieves the orderByField property.
      *
      * @return string
      */
@@ -287,7 +301,7 @@ class LogReader
     }
 
     /**
-     * Retrieves the orderByDirection property
+     * Retrieves the orderByDirection property.
      *
      * @return string
      */
@@ -297,7 +311,7 @@ class LogReader
     }
 
     /**
-     * Retrieves the level property
+     * Retrieves the level property.
      *
      * @return string
      */
@@ -307,7 +321,7 @@ class LogReader
     }
 
     /**
-     * Retrieves the date property
+     * Retrieves the date property.
      *
      * @return string
      */
@@ -317,7 +331,7 @@ class LogReader
     }
 
     /**
-     * Retrieves the currentLogPath property
+     * Retrieves the currentLogPath property.
      *
      * @return string
      */
@@ -327,7 +341,7 @@ class LogReader
     }
 
     /**
-     * Retrieves the path property
+     * Retrieves the path property.
      *
      * @return string
      */
@@ -338,7 +352,7 @@ class LogReader
 
     /**
      * Sets the directory path to retrieve the
-     * log files from
+     * log files from.
      *
      * @param $path
      */
@@ -349,15 +363,15 @@ class LogReader
 
     /**
      * Modifies and returns the collection result if modifiers are set
-     * such as an orderBy
+     * such as an orderBy.
      *
      * @param Collection $collection
+     *
      * @return Collection
      */
     private function postCollectionModifiers(Collection $collection)
     {
-        if($this->getOrderByField() && $this->getOrderByDirection())
-        {
+        if ($this->getOrderByField() && $this->getOrderByDirection()) {
             $collection = $this->processCollectionOrderBy($collection);
         }
 
@@ -366,9 +380,10 @@ class LogReader
 
     /**
      * Modifies the collection to be sorted by the orderByField and
-     * orderByDirection properties
+     * orderByDirection properties.
      *
      * @param Collection $collection
+     *
      * @return $this|Collection
      */
     private function processCollectionOrderBy(Collection $collection)
@@ -379,11 +394,14 @@ class LogReader
 
         $desc = false;
 
-        if($direction === 'desc') $desc = true;
+        if ($direction === 'desc') {
+            $desc = true;
+        }
 
-        $collection->sortBy(function($entry) use ($field)
-        {
-            if(property_exists($entry, $field)) return $entry->{$field};
+        $collection->sortBy(function ($entry) use ($field) {
+            if (property_exists($entry, $field)) {
+                return $entry->{$field};
+            }
         }, SORT_NATURAL, $desc);
 
         return $collection;
@@ -399,14 +417,16 @@ class LogReader
     {
         $page = Input::get('page');
 
-        if(is_numeric($page)) return intval($page);
+        if (is_numeric($page)) {
+            return intval($page);
+        }
 
         return 1;
     }
 
     /**
      * Sets the currentLogPath property to
-     * the specified path
+     * the specified path.
      *
      * @param $path
      */
@@ -416,7 +436,7 @@ class LogReader
     }
 
     /**
-     * Sets the orderByField property to the specified field
+     * Sets the orderByField property to the specified field.
      *
      * @param string $field
      */
@@ -426,14 +446,16 @@ class LogReader
 
         $fields = array(
             'date',
-            'level'
+            'level',
         );
 
-        if(in_array($field, $fields)) $this->orderByField = $field;
+        if (in_array($field, $fields)) {
+            $this->orderByField = $field;
+        }
     }
 
     /**
-     * Sets the orderByDirection property to the specified direction
+     * Sets the orderByDirection property to the specified direction.
      *
      * @param string $direction
      */
@@ -441,11 +463,13 @@ class LogReader
     {
         $direction = strtolower($direction);
 
-        if($direction == 'desc' || $direction == 'asc') $this->orderByDirection = $direction;
+        if ($direction == 'desc' || $direction == 'asc') {
+            $this->orderByDirection = $direction;
+        }
     }
 
     /**
-     * Sets the level property to the specified level
+     * Sets the level property to the specified level.
      *
      * @param $level
      */
@@ -457,15 +481,15 @@ class LogReader
     }
 
     /**
-     * Sets the date property to filter log results
+     * Sets the date property to filter log results.
      *
      * @param int $date
+     *
      * @throws InvalidTimestampException
      */
     private function setDate($date)
     {
-        if( ! $this->isValidTimeStamp($date))
-        {
+        if (!$this->isValidTimeStamp($date)) {
             $message = "Inserted date: $date is not a valid timestamp.";
 
             throw new InvalidTimestampException($message);
@@ -475,7 +499,7 @@ class LogReader
     }
 
     /**
-     * Sets the includeRead property
+     * Sets the includeRead property.
      *
      * @param bool $bool
      */
@@ -485,9 +509,10 @@ class LogReader
     }
 
     /**
-     * Returns true/false if the inserted timestamp is valid
+     * Returns true/false if the inserted timestamp is valid.
      *
      * @param $timestamp
+     *
      * @return bool
      */
     private function isValidTimestamp($timestamp)
@@ -497,10 +522,11 @@ class LogReader
 
     /**
      * Parses the content of the file separating
-     * the errors into a single array
+     * the errors into a single array.
      *
      * @param $content
      * @param string $allowedLevel
+     *
      * @return array
      */
     private function parseLog($content, $allowedLevel = 'all')
@@ -514,23 +540,17 @@ class LogReader
 
         $data = preg_split($pattern, $content);
 
-        if ($data[0] < 1)
-        {
+        if ($data[0] < 1) {
             $trash = array_shift($data);
 
             unset($trash);
         }
 
-        foreach ($headings as $heading)
-        {
-            for ($i = 0, $j = count($heading); $i < $j; $i++)
-            {
-                foreach ($this->levels as $level)
-                {
-                    if ($level == $allowedLevel || $allowedLevel == 'all')
-                    {
-                        if (strpos(strtolower($heading[$i]), strtolower('.'.$level)))
-                        {
+        foreach ($headings as $heading) {
+            for ($i = 0, $j = count($heading); $i < $j; $i++) {
+                foreach ($this->levels as $level) {
+                    if ($level == $allowedLevel || $allowedLevel == 'all') {
+                        if (strpos(strtolower($heading[$i]), strtolower('.'.$level))) {
                             $log[] = array(
                                 'level' => $level,
                                 'header' => $heading[$i],
@@ -552,7 +572,7 @@ class LogReader
 
     /**
      * Retrieves all the data inside each log file
-     * from the log file list
+     * from the log file list.
      *
      * @return array|bool
      */
@@ -562,12 +582,10 @@ class LogReader
 
         $files = $this->getLogFileList();
 
-        if(is_array($files))
-        {
+        if (is_array($files)) {
             $count = 0;
 
-            foreach($files as $file)
-            {
+            foreach ($files as $file) {
                 $data[$count]['contents'] = file_get_contents($file);
                 $data[$count]['path'] = $file;
                 $count++;
@@ -580,7 +598,7 @@ class LogReader
     }
 
     /**
-     * Returns an array of log file paths
+     * Returns an array of log file paths.
      *
      * @return bool|array
      */
@@ -588,23 +606,19 @@ class LogReader
     {
         $path = $this->getLogPath();
 
-        if(is_dir($path))
-        {
+        if (is_dir($path)) {
             /*
              * Matches files in the log directory with the name of 'laravel.log'
              */
             $logPath = sprintf('%s%slaravel.log', $path, DIRECTORY_SEPARATOR);
 
-            if($this->getDate() != 'none')
-            {
+            if ($this->getDate() != 'none') {
                 /*
                  * Matches files in the log directory with the file name
                  * of 'laravel-YYYY-MM-DD.log' if a date is supplied
                  */
                 $logPath = sprintf('%s%slaravel-%s.log', $path, DIRECTORY_SEPARATOR, $this->getDate());
-
-            } elseif(LogReaderServiceProvider::$laravelVersion === 5)
-            {
+            } elseif (LogReaderServiceProvider::$laravelVersion === 5) {
                 /*
                  * Matches files in the log directory with the name of 'laravel-*.log'
                  */
