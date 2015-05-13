@@ -51,6 +51,6 @@ class LogReaderServiceProvider extends ServiceProvider
      */
     public function provides()
     {
-        return array('log-reader');
+        return ['log-reader'];
     }
 }

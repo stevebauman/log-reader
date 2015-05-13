@@ -56,14 +56,14 @@ class Entry
      *
      * @var array
      */
-    protected $attributes = array();
+    protected $attributes = [];
 
     /**
      * Constructs a new entry object with the specified attributes.
      *
      * @param array $attributes
      */
-    public function __construct($attributes = array())
+    public function __construct($attributes = [])
     {
         $this->setAttributes($attributes);
 
@@ -253,7 +253,7 @@ class Entry
      *
      * @param array $attributes
      */
-    private function setAttributes($attributes = array())
+    private function setAttributes($attributes = [])
     {
         if (is_array($attributes)) {
             $this->attributes = $attributes;

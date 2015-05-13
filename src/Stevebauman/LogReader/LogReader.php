@@ -69,7 +69,7 @@ class LogReader
      *
      * @var array
      */
-    protected $levels = array(
+    protected $levels = [
         'emergency',
         'alert',
         'critical',
@@ -78,7 +78,7 @@ class LogReader
         'notice',
         'info',
         'debug',
-    );
+    ];
 
     /**
      * Construct a new instance and set the path of the log entries.
@@ -97,7 +97,7 @@ class LogReader
      */
     public function get()
     {
-        $entries = array();
+        $entries = [];
 
         $files = $this->getLogFiles();
 
@@ -444,10 +444,10 @@ class LogReader
     {
         $field = strtolower($field);
 
-        $fields = array(
+        $fields = [
             'date',
             'level',
-        );
+        ];
 
         if (in_array($field, $fields)) {
             $this->orderByField = $field;
@@ -531,7 +531,7 @@ class LogReader
      */
     private function parseLog($content, $allowedLevel = 'all')
     {
-        $log = array();
+        $log = [];
 
         // The regex pattern to match the logging format '[YYYY-MM-DD HH:MM:SS]'
         $pattern = "/\[\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\].*/";
@@ -551,12 +551,12 @@ class LogReader
                 foreach ($this->levels as $level) {
                     if ($level == $allowedLevel || $allowedLevel == 'all') {
                         if (strpos(strtolower($heading[$i]), strtolower('.'.$level))) {
-                            $log[] = array(
+                            $log[] = [
                                 'level' => $level,
                                 'header' => $heading[$i],
                                 'stack' => $data[$i],
                                 'filePath' => $this->getCurrentLogPath(),
-                            );
+                            ];
                         }
                     }
                 }
@@ -578,7 +578,7 @@ class LogReader
      */
     private function getLogFiles()
     {
-        $data = array();
+        $data = [];
 
         $files = $this->getLogFileList();
 
