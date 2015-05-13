@@ -57,8 +57,8 @@ class LogReader
     protected $date = 'none';
 
     /**
-     * Stores the bool whether or not to return
-     * read entries.
+     * Stores the bool whether or
+     * not to return read entries.
      *
      * @var bool
      */
