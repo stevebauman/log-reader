@@ -130,7 +130,9 @@ class Entry
      * Retrieves an attribute by the specified key
      * from the attributes array.
      *
-     * @param $key
+     * @param int|string $key
+     *
+     * @return int|string|null
      */
     public function getAttribute($key)
     {
