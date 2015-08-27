@@ -19,6 +19,7 @@ class Log extends Model
      * @var array
      */
     protected $casts = [
+        'read' => 'bool',
         'context' => 'array',
         'extra' => 'array',
     ];
