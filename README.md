@@ -16,21 +16,9 @@ with ease. Using Log Reader is almost exactly like using any Eloquent model.
 
 Add LogReader to your `composer.json` file:
 
-	"stevebauman/log-reader": "1.0.*"
+	"stevebauman/log-reader": "1.1.*"
 
 Then run `composer update` on your project source.
-
-#### Laravel 4
-
-Add the service provider in `app/config/app.php` file:
-
-	'Stevebauman\LogReader\LogReaderServiceProvider',
-	
-Add the alias in `app/config/app.php` file:
-
-	'LogReader' => 'Stevebauman\LogReader\Facades\LogReader',
-
-#### Laravel 5
 
 Add the service provider in `config/app.php` file:
 
