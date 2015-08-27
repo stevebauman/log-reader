@@ -21,7 +21,8 @@ Run the migration:
 
     php artisan migrate
     
-You're all set! Anything logged in your application (such as exceptions) will be logged in your database as well.
+You're all set! Anything that is logged in your application (such as exceptions) will be stored in the `logs` database
+table.
 
 ## Usage
 
@@ -49,7 +50,7 @@ any ordinary eloquent model:
 
 #### Using your own model
 
-To use your own model, create one with the following casts:
+To use your own model, create one with the following casts like so:
     
     namespace App\Models;
     
@@ -75,3 +76,21 @@ To use your own model, create one with the following casts:
     }
 
 You're all set!
+
+## Model Fields
+
+The model will contain the following attributes:
+
+    $record = Log::first();
+    
+    $record->id; // (int)
+    $record->created_at; // (datetime)
+    $record->updated_at; // (datetime)
+    $record->read; // Returns true / false (bool)
+    $record->message; // The exception that occurred (string)
+    $record->context; // The stack trace of the exception (array)
+    $record->level; // The integer level of the error (int)
+    $record->level_name; // The name of the level of error, such as `INFO`, `ERROR`, `WARNING` (string)
+    $record->channel; // The channel the log was sent through, which will most likely be `local` (string)
+    $record->generated; // The datetime of the exception (datetime)
+    $record->extra; // Extra data that was passed (array)
