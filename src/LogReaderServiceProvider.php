@@ -15,16 +15,6 @@ class LogReaderServiceProvider extends ServiceProvider
     protected $defer = false;
 
     /**
-     * Bind the handlers to the IoC for resolving and easy overriding.
-     */
-    public function boot()
-    {
-        $this->app->bind(EloquentHandler::class, function () {
-            return new EloquentHandler();
-        });
-    }
-
-    /**
      * Register the service provider.
      */
     public function register()
