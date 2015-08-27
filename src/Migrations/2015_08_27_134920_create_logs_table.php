@@ -17,7 +17,7 @@ class CreateLogsTable extends Migration
             $table->increments('id');
             $table->timestamps();
             $table->boolean('read')->default(false);
-            $table->string('message')->nullable();
+            $table->text('message')->nullable();
             $table->text('context')->nullable();
             $table->integer('level');
             $table->string('level_name');
