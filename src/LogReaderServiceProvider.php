@@ -27,10 +27,6 @@ class LogReaderServiceProvider extends ServiceProvider
             $config => config_path('log-reader.php'),
         ], 'config');
 
-        $this->publishes([
-            __DIR__.'/Migrations' => database_path('migrations'),
-        ], 'migrations');
-
         $this->app->bind('log-reader', function () {
             return new LogReader();
         });

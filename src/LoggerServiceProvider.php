@@ -38,6 +38,8 @@ class LoggerServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        $this->publishes([
+            __DIR__.'/Migrations' => database_path('migrations'),
+        ], 'migrations');
     }
 }
