@@ -15,6 +15,8 @@ Log Reader also allows you to automatically save all future log entries to the d
 
 ## Index
 
-- [Use by reading / parsing your .log files](docs/PARSING.md)
-- [Use by saving all future log entries to database and manage through eloquent](docs/DATABASE.md)
-- [Adding Your Own Handlers](docs/HANDLERS.md)
+- Installation and Usage
+ - [Use by reading / parsing your .log files](docs/PARSING.md)
+ - [Use by saving all future log entries to database and manage through eloquent](docs/DATABASE.md)
+- Customization
+ - [Adding Your Own Handlers](docs/HANDLERS.md)
