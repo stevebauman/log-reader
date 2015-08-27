@@ -2,6 +2,7 @@
 
 namespace Stevebauman\LogReader\Handlers;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Config;
 use Monolog\Handler\AbstractHandler;
 use Stevebauman\LogReader\Exceptions\ModelDoesNotExistException;
@@ -27,6 +28,18 @@ class EloquentHandler extends AbstractHandler
         $model->generated   = array_get($record, 'datetime');
         $model->extra       = array_get($record, 'extra');
 
+        return $this->createLog($model);
+    }
+
+    /**
+     * Creates a new log record using Eloquent.
+     *
+     * @param Model $model
+     *
+     * @return bool
+     */
+    public function createLog(Model $model)
+    {
         if($model->save() && $model->exists) {
             return true;
         }
