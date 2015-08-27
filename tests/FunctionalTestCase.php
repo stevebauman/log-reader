@@ -36,11 +36,9 @@ class FunctionalTestCase extends TestCase
             'prefix'   => '',
         ]);
 
-        $application['config']->set('log-reader.handlers', [
-            EloquentHandler::class,
-        ]);
-
         $application['config']->set('log-reader.model', Log::class);
+
+        $application['config']->set('log-reader.handlers', [EloquentHandler::class]);
     }
 
     /**
