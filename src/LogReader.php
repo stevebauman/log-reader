@@ -382,13 +382,11 @@ class LogReader
             $desc = true;
         }
 
-        $collection->sortBy(function ($entry) use ($field) {
+        return $collection->sortBy(function ($entry) use ($field) {
             if (property_exists($entry, $field)) {
                 return $entry->{$field};
             }
-        }, SORT_NATURAL, $desc);
-
-        return $collection;
+        }, SORT_REGULAR, $desc);
     }
 
     /**

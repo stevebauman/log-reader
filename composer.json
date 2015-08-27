@@ -21,5 +21,10 @@
             "Stevebauman\\LogReader\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Stevebauman\\LogReader\\Tests\\": "tests/"
+        }
+    },
     "minimum-stability": "stable"
 }

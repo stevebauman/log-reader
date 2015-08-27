@@ -3,15 +3,8 @@
 namespace Stevebauman\LogReader;
 
 use Mockery as m;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Cache;
-
-/*
- * Override Laravel's storage path function
- */
-function storage_path()
-{
-    return '';
-}
 
 class LogReaderTest extends \PHPUnit_Framework_TestCase
 {
@@ -74,7 +67,9 @@ class LogReaderTest extends \PHPUnit_Framework_TestCase
 
     protected function setLogReader()
     {
-        $this->logReader = new LogReader;
+        Config::shouldReceive('get')->once()->andReturn('');
+
+        $this->logReader = new LogReader();
 
         $this->logReader->setLogPath($this->stubsLogPath);
     }
