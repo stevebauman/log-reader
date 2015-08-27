@@ -7,13 +7,19 @@ Follow the installation and usage below to get started.
 ## Installation
 
 If you want to save all your log events to the database so you can easily manage
-them with Eloquent instead of parsing your log file, you can do so.
+them with Eloquent instead of parsing your log files, you can do so.
 
-Start by inserting the `LoggerServiceProvider` int your `app/config.php` file:
+Add LogReader to your `composer.json` file:
+
+	"stevebauman/log-reader": "1.1.*"
+
+Then run `composer update` on your project source.
+
+Insert the `LoggerServiceProvider` int your `app/config.php` file:
 
     Stevebauman\LogReader\LoggerServiceProvider::class,
 
-Then publish the migration:
+Publish the migration:
 
     php artisan vendor:publish --provider="Stevebauman\LogReader\LoggerServiceProvider" --tag="migrations"
 
