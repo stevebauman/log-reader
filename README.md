@@ -13,6 +13,10 @@ with ease.
 
 Log Reader also allows you to automatically save all future log entries to the database for easy management and viewing.
 
+## Requirements
+
+- Laravel 5.*
+
 ## Index
 
 - Installation and Usage
