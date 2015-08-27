@@ -15,5 +15,5 @@ Log Reader also allows you to automatically save all log entries to the database
 
 ## Index
 
-- [Use by reading log files](docs/PARSING.md)
-- [Use by saving log entries to database](docs/DATABASE.md)
+- [Use by reading / parsing your log files](docs/PARSING.md)
+- [Use by saving all future log entries to database and manage through eloquent](docs/DATABASE.md)
