@@ -1,10 +1,10 @@
 # Log Reader
 
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/stevebauman/log-reader/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/stevebauman/log-reader/?branch=master)
-[![Build Status](https://travis-ci.org/stevebauman/log-reader.svg?branch=master)](https://travis-ci.org/stevebauman/log-reader)
-[![Latest Stable Version](https://poser.pugx.org/stevebauman/log-reader/v/stable.svg)](https://packagist.org/packages/stevebauman/log-reader)
-[![Total Downloads](https://poser.pugx.org/stevebauman/log-reader/downloads.svg)](https://packagist.org/packages/stevebauman/log-reader)
-[![License](https://poser.pugx.org/stevebauman/log-reader/license.svg)](https://packagist.org/packages/stevebauman/log-reader)
+[![Travis CI](https://img.shields.io/travis/stevebauman/log-reader.svg?style=flat-square)](https://travis-ci.org/stevebauman/log-reader)
+[![Scrutinizer Code Quality](https://img.shields.io/scrutinizer/g/stevebauman/log-reader.svg?style=flat-square)](https://scrutinizer-ci.com/g/stevebauman/log-reader/?branch=master)
+[![Latest Stable Version](https://img.shields.io/packagist/v/stevebauman/log-reader.svg?style=flat-square)](https://packagist.org/packages/stevebauman/log-reader)
+[![Total Downloads](https://img.shields.io/packagist/dt/stevebauman/log-reader.svg?style=flat-square)](https://packagist.org/packages/stevebauman/log-reader)
+[![License](https://img.shields.io/packagist/l/stevebauman/log-reader.svg?style=flat-square)](https://packagist.org/packages/stevebauman/log-reader)
 
 ## Description
 
