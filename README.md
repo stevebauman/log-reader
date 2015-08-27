@@ -1,5 +1,4 @@
-![Log Reader Banner]
-(https://raw.githubusercontent.com/stevebauman/log-reader/master/log-reader-banner.jpg)
+# Log Reader
 
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/stevebauman/log-reader/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/stevebauman/log-reader/?branch=master)
 [![Build Status](https://travis-ci.org/stevebauman/log-reader.svg?branch=master)](https://travis-ci.org/stevebauman/log-reader)
@@ -10,7 +9,9 @@
 ## Description
 
 Log Reader is an easy, tested, Laravel log reader and management tool. You're able to view, manage, and modify log entries
-with ease. Using Log Reader is almost exactly like using any Eloquent model.
+with ease.
+
+Log Reader also allows you to automatically save all log entries to the database for easy management and viewing.
 
 ## Installation
 
