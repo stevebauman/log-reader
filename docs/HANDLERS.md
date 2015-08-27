@@ -5,6 +5,9 @@ Log Handlers allow you to save log entries in whatever way you please. Adding yo
 Create your handler (maybe in `app/Handlers` directory?). As an example, lets create a log handler that overrides
 the current build in database handler.
 
+> **Note**: Adding your own handlers does not override the standard Laravel logger. All log entries will still be
+> created inside your `.log` files on your server.
+
     namespace App\Handlers;
     
     use App\Models\Log;
