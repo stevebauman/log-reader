@@ -13,24 +13,13 @@ class LoggerServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $handlers = app('config')->get('log-reader.handlers', []);
+        $handlers = $this->getHandlers();
 
         $logger = app('log');
 
         // Make sure the logger is a Writer instance
         if($logger instanceof Writer) {
-            $monolog = $logger->getMonolog();
-
-            // Make sure the Monolog Logger is returned
-            if($monolog instanceof Logger) {
-                // We'll go through each handler, make them through
-                // the IoC, and then push them to monolog
-                foreach($handlers as $handler) {
-                    $handler = app($handler);
-
-                    $monolog->pushHandler($handler);
-                }
-            }
+            $this->pushHandlers($logger->getMonolog(), $handlers);
         }
     }
 
@@ -42,5 +31,33 @@ class LoggerServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__.'/Migrations' => database_path('migrations'),
         ], 'migrations');
+    }
+
+    /**
+     * Returns the LogReader handlers class array.
+     *
+     * @return array
+     */
+    public function getHandlers()
+    {
+        return app('config')->get('log-reader.handlers', []);
+    }
+
+    /**
+     * Pushes the specific array of handlers into the
+     * Monolog Logger instance.
+     *
+     * @param Logger $logger
+     * @param array $handlers
+     */
+    public function pushHandlers(Logger $logger, array $handlers = [])
+    {
+        if(count($handlers) > 0) {
+            foreach($handlers as $handler) {
+                $handler = app($handler);
+
+                $logger->pushHandler($handler);
+            }
+        }
     }
 }
