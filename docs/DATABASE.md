@@ -15,12 +15,20 @@ Add LogReader to your `composer.json` file:
 
 Then run `composer update` on your project source.
 
-Insert the `LoggerServiceProvider` int your `app/config.php` file:
+Insert the `LogReaderServiceProvider` in `config/app.php` file:
 
+	Stevebauman\LogReader\LogReaderServiceProvider::class,
+	
+Insert the `LoggerServiceProvider` into your `config/app.php` file:
+    
     Stevebauman\LogReader\LoggerServiceProvider::class,
+	
+Publish the configuration file:
+
+    php artisan vendor:publish --provider="Stevebauman\LogReader\LogReaderServiceProvider" --tag="config"
 
 Publish the migration:
-
+    
     php artisan vendor:publish --provider="Stevebauman\LogReader\LoggerServiceProvider" --tag="migrations"
 
 Run the migration:
@@ -80,6 +88,19 @@ To use your own model, create one with the following casts like so:
             'extra' => 'array',
         ];
     }
+
+Then insert the model into the `config/log-reader.php` configuration file:
+    
+    /*
+    |--------------------------------------------------------------------------
+    | Log Model
+    |--------------------------------------------------------------------------
+    |
+    | Here you may configure the log model for storing logs into your database.
+    |
+    */
+
+    'model' => App\Models\Log::class,
 
 You're all set!
 
