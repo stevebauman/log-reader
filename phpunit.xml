@@ -12,10 +12,7 @@
 >
     <filter>
         <whitelist>
-            <directory>src/Stevebauman/LogReader</directory>
-            <exclude>
-                <file>src/Stevebauman/LogReader/LogReaderServiceProvider.php</file>
-            </exclude>
+            <directory>src/</directory>
         </whitelist>
     </filter>
 

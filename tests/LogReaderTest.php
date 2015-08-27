@@ -1,12 +1,12 @@
 <?php
 
-namespace Stevebauman\LogReader;
+namespace Stevebauman\LogReader\Tests;
 
 use Mockery as m;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Cache;
+use Stevebauman\LogReader\LogReader;
 
-class LogReaderTest extends \PHPUnit_Framework_TestCase
+class LogReaderTest extends TestCase
 {
     /**
      * Stores the mocked app instance
@@ -36,7 +36,7 @@ class LogReaderTest extends \PHPUnit_Framework_TestCase
      */
     protected $stubsLogPath = '';
 
-    protected function setUp()
+    public function setUp()
     {
         parent::setUp();
 
@@ -49,7 +49,7 @@ class LogReaderTest extends \PHPUnit_Framework_TestCase
         $this->insertStubsOnDateLog();
     }
 
-    protected function tearDown()
+    public function tearDown()
     {
         parent::tearDown();
 
@@ -67,8 +67,6 @@ class LogReaderTest extends \PHPUnit_Framework_TestCase
 
     protected function setLogReader()
     {
-        Config::shouldReceive('get')->once()->andReturn('');
-
         $this->logReader = new LogReader();
 
         $this->logReader->setLogPath($this->stubsLogPath);

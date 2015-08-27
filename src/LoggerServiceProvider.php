@@ -14,6 +14,7 @@ class LoggerServiceProvider extends ServiceProvider
     public function boot()
     {
         $handlers = app('config')->get('log-reader.handlers', []);
+
         $logger = app('log');
 
         // Make sure the logger is a Writer instance
