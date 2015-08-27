@@ -528,17 +528,19 @@ class LogReader
             unset($trash);
         }
 
-        foreach ($headings as $heading) {
-            for ($i = 0, $j = count($heading); $i < $j; $i++) {
-                foreach ($this->levels as $level) {
-                    if ($level == $allowedLevel || $allowedLevel == 'all') {
-                        if (strpos(strtolower($heading[$i]), strtolower('.'.$level))) {
-                            $entries[] = [
-                                'level' => $level,
-                                'header' => $heading[$i],
-                                'stack' => $data[$i],
-                                'filePath' => $this->getCurrentLogPath(),
-                            ];
+        if(is_array($headings)) {
+            foreach ($headings as $heading) {
+                for ($i = 0, $j = count($heading); $i < $j; $i++) {
+                    foreach ($this->levels as $level) {
+                        if ($level == $allowedLevel || $allowedLevel == 'all') {
+                            if (strpos(strtolower($heading[$i]), strtolower('.'.$level))) {
+                                $entries[] = [
+                                    'level' => $level,
+                                    'header' => $heading[$i],
+                                    'stack' => $data[$i],
+                                    'filePath' => $this->getCurrentLogPath(),
+                                ];
+                            }
                         }
                     }
                 }
