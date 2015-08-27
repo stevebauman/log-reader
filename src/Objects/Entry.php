@@ -4,9 +4,6 @@ namespace Stevebauman\LogReader\Objects;
 
 use Illuminate\Support\Facades\Cache;
 
-/**
- * Class Entry.
- */
 class Entry
 {
     /**

@@ -5,13 +5,11 @@ namespace Stevebauman\LogReader;
 use Stevebauman\LogReader\Exceptions\InvalidTimestampException;
 use Stevebauman\LogReader\Exceptions\UnableToRetrieveLogFilesException;
 use Stevebauman\LogReader\Objects\Entry;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Input;
-use Illuminate\Support\Facades\Paginator;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
-/**
- * Class LogReader.
- */
 class LogReader
 {
     /**
@@ -54,7 +52,7 @@ class LogReader
      *
      * @var string
      */
-    protected $date = 'none';
+    protected $date;
 
     /**
      * Stores the bool whether or
@@ -85,7 +83,9 @@ class LogReader
      */
     public function __construct()
     {
-        $this->setLogPath(storage_path('logs'));
+        $path = Config::get('log-reader.path');
+
+        $this->setLogPath($path);
     }
 
     /**
@@ -102,35 +102,21 @@ class LogReader
         $files = $this->getLogFiles();
 
         if (is_array($files)) {
-            /*
-             * Retrieve the log files
-             */
+            // Retrieve the log files
             foreach ($files as $log) {
-                /*
-                 * Set the current log path for easy manipulation
-                 * of the file if needed
-                 */
+                // Set the current log path for easy manipulation of the file if needed
                 $this->setCurrentLogPath($log['path']);
 
-                /*
-                 * Parse the log into an array of entries, passing in the level
-                 * so it can be filtered
-                 */
+                // Parse the log into an array of entries, passing
+                // in the level so it can be filtered
                 $parsedLog = $this->parseLog($log['contents'], $this->getLevel());
 
-                /*
-                 * Create a new Entry object for each parsed log entry
-                 */
+                // Create a new Entry object for each parsed log entry
                 foreach ($parsedLog as $entry) {
                     $newEntry = new Entry($entry);
 
-                    /*
-                     * Check if the entry has already been read,
-                     * and if read entries should be included.
-                     *
-                     * If includeRead is false, and the entry is read,
-                     * then continue processing.
-                     */
+                    // Check if the entry has already been read, and if read entries should be included.
+                    // If includeRead is false, and the entry is read, then continue processing.
                     if (!$this->includeRead && $newEntry->isRead()) {
                         continue;
                     }
@@ -139,9 +125,7 @@ class LogReader
                 }
             }
 
-            /*
-             * Return a new Collection of entries
-             */
+            // Return a new Collection of entries
             return $this->postCollectionModifiers(new Collection($entries));
         }
 
@@ -229,7 +213,7 @@ class LogReader
 
         $entries = $entries->slice($offset, $perPage, true)->all();
 
-        return Paginator::make($entries, $total, $perPage);
+        return new LengthAwarePaginator($entries, $total, $perPage);
     }
 
     /**
@@ -531,7 +515,7 @@ class LogReader
      */
     private function parseLog($content, $allowedLevel = 'all')
     {
-        $log = [];
+        $entries = [];
 
         // The regex pattern to match the logging format '[YYYY-MM-DD HH:MM:SS]'
         $pattern = "/\[\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\].*/";
@@ -551,7 +535,7 @@ class LogReader
                 foreach ($this->levels as $level) {
                     if ($level == $allowedLevel || $allowedLevel == 'all') {
                         if (strpos(strtolower($heading[$i]), strtolower('.'.$level))) {
-                            $log[] = [
+                            $entries[] = [
                                 'level' => $level,
                                 'header' => $heading[$i],
                                 'stack' => $data[$i],
@@ -563,11 +547,7 @@ class LogReader
             }
         }
 
-        unset($headings);
-
-        unset($log_data);
-
-        return $log;
+        return $entries;
     }
 
     /**
@@ -607,22 +587,13 @@ class LogReader
         $path = $this->getLogPath();
 
         if (is_dir($path)) {
-            /*
-             * Matches files in the log directory with the name of 'laravel.log'
-             */
+            // Matches files in the log directory with the name of 'laravel.log'
             $logPath = sprintf('%s%slaravel.log', $path, DIRECTORY_SEPARATOR);
 
-            if ($this->getDate() != 'none') {
-                /*
-                 * Matches files in the log directory with the file name
-                 * of 'laravel-YYYY-MM-DD.log' if a date is supplied
-                 */
-                $logPath = sprintf('%s%slaravel-%s.log', $path, DIRECTORY_SEPARATOR, $this->getDate());
-            } elseif (LogReaderServiceProvider::$laravelVersion === 5) {
-                /*
-                 * Matches files in the log directory with the name of 'laravel-*.log'
-                 */
-                $logPath = sprintf('%s%slaravel-*.log', $path, DIRECTORY_SEPARATOR);
+            if ($date = $this->getDate()) {
+                // Matches files in the log directory with the file name of
+                // 'laravel-YYYY-MM-DD.log' if a date is supplied
+                $logPath = sprintf('%s%slaravel-%s.log', $path, DIRECTORY_SEPARATOR, $date);
             }
 
             return glob($logPath);
