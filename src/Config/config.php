@@ -25,4 +25,21 @@ return [
     */
 
     'model' => Stevebauman\LogReader\Models\Log::class,
+
+    /*
+    |--------------------------------------------------------------------------
+    | Log Handlers
+    |--------------------------------------------------------------------------
+    |
+    | Here you may configure the monolog handlers for handling all log entries.
+    |
+    | By default, the EloquentHandler is included.
+    |
+    */
+
+    'handlers' => [
+
+        Stevebauman\LogReader\Handlers\EloquentHandler::class,
+
+    ],
 ];
