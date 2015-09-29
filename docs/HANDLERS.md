@@ -61,4 +61,4 @@ Then add the handler to the `config/log-reader.php` file:
 
     ],
    
-Now you're all set! Anytime a log record is generated, it will be sent to your class.
+Now you're all set! Anytime a log record is generated, it will be sent to your handler.
