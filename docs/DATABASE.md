@@ -83,9 +83,9 @@ To use your own model, create one with the following casts like so:
          * @var array
          */
         protected $casts = [
-            'read' => 'bool',
+            'read'    => 'bool',
             'context' => 'array',
-            'extra' => 'array',
+            'extra'   => 'array',
         ];
     }
 
