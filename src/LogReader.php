@@ -587,16 +587,7 @@ class LogReader
         $path = $this->getLogPath();
 
         if (is_dir($path)) {
-            // Matches files in the log directory with the name of 'laravel.log'
-            $logPath = sprintf('%s%slaravel.log', $path, DIRECTORY_SEPARATOR);
-
-            if ($date = $this->getDate()) {
-                // Matches files in the log directory with the file name of
-                // 'laravel-YYYY-MM-DD.log' if a date is supplied
-                $logPath = sprintf('%s%slaravel-%s.log', $path, DIRECTORY_SEPARATOR, $date);
-            }
-
-            return glob($logPath);
+            return glob($path.'/*.log');
         }
 
         return false;
