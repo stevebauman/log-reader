@@ -1,6 +1,6 @@
 {
     "name": "stevebauman/log-reader",
-    "description": "An easy log reader and management tool for Laravel 5",
+    "description": "An easy log reader and management tool for Laravel 6",
     "tags": ["reader", "log reader", "log viewer", "log manager", "log", "logs", "laravel"],
     "authors": [
         {
@@ -10,12 +10,12 @@
     ],
     "license": "MIT",
     "require": {
-        "php": ">=5.5.9",
-        "illuminate/support": "5.*"
+        "php": ">=7.2",
+        "illuminate/support": "6.*"
     },
     "require-dev": {
-        "orchestra/testbench": "~3.0",
-        "mockery/mockery": "0.9.*"
+        "orchestra/testbench": "4.4.1",
+        "mockery/mockery": "1.2.3"
     },
     "autoload": {
         "psr-4": {

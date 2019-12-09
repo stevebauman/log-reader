@@ -15,7 +15,7 @@ Log Reader also allows you to automatically save all future log entries to the d
 
 ## Requirements
 
-- Laravel 5.*
+- Laravel 6*
 
 ## Index
 
