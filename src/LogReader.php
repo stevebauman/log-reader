@@ -2,13 +2,11 @@
 
 namespace Stevebauman\LogReader;
 
+use Illuminate\Support\Collection;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Stevebauman\LogReader\Objects\Entry;
 use Stevebauman\LogReader\Exceptions\InvalidTimestampException;
 use Stevebauman\LogReader\Exceptions\UnableToRetrieveLogFilesException;
-use Stevebauman\LogReader\Objects\Entry;
-use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Input;
-use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Collection;
 
 class LogReader
 {
@@ -79,13 +77,11 @@ class LogReader
     ];
 
     /**
-     * Construct a new instance and set the path of the log entries.
+     * Constructor.
      */
     public function __construct()
     {
-        $path = Config::get('log-reader.path');
-
-        $this->setLogPath($path);
+        $this->path = config('log-reader.path');
     }
 
     /**
@@ -135,28 +131,27 @@ class LogReader
     }
 
     /**
-     * Finds a logged error by it's ID.
+     * Finds a logged error by its identifier.
      *
      * @param string $id
      *
      * @return mixed|null
+     *
+     * @throws UnableToRetrieveLogFilesException
      */
-    public function find($id = '')
+    public function find($id)
     {
-        $entries = $this->get()->filter(function ($entry) use ($id) {
-            if ($entry->id === $id) {
-                return true;
-            }
-        });
-
-        return $entries->first();
+        return $this->get()->where('id', '=', $id)->first();
     }
 
     /**
-     * Marks all retrieved log entries as read and
-     * returns the number of entries that have been marked.
+     * Marks all retrieved log entries as read.
+     *
+     * Returns the total number of entries marked.
      *
      * @return int
+     *
+     * @throws UnableToRetrieveLogFilesException
      */
     public function markRead()
     {
@@ -178,6 +173,8 @@ class LogReader
      * the number of entries that have been deleted.
      *
      * @return int
+     *
+     * @throws UnableToRetrieveLogFilesException
      */
     public function delete()
     {
@@ -200,10 +197,12 @@ class LogReader
      * @param int $perPage
      *
      * @return mixed
+     *
+     * @throws UnableToRetrieveLogFilesException
      */
     public function paginate($perPage = 25)
     {
-        $currentPage = $this->getPageFromInput();
+        $currentPage = $this->getPaginationPage();
 
         $offset = (($currentPage - 1) * $perPage);
 
@@ -211,7 +210,7 @@ class LogReader
 
         $total = $entries->count();
 
-        $entries = $entries->slice($offset, $perPage, true)->all();
+        $entries = $entries->slice($offset, $perPage)->all();
 
         return new LengthAwarePaginator($entries, $total, $perPage);
     }
@@ -219,13 +218,13 @@ class LogReader
     /**
      * Sets the level to sort the log entries by.
      *
-     * @param $level
+     * @param string $level
      *
      * @return $this
      */
     public function level($level)
     {
-        $this->setLevel($level);
+        $this->level = strtolower($level);
 
         return $this;
     }
@@ -241,7 +240,13 @@ class LogReader
      */
     public function date($date)
     {
-        $this->setDate($date);
+        if (!$this->isValidTimeStamp($date)) {
+            $message = "Inserted date: $date is not a valid timestamp.";
+
+            throw new InvalidTimestampException($message);
+        }
+
+        $this->date = date('Y-m-d', $date);
 
         return $this;
     }
@@ -253,7 +258,7 @@ class LogReader
      */
     public function includeRead()
     {
-        $this->setIncludeRead(true);
+        $this->includeRead = true;
 
         return $this;
     }
@@ -353,7 +358,7 @@ class LogReader
      *
      * @return Collection
      */
-    private function postCollectionModifiers(Collection $collection)
+    protected function postCollectionModifiers(Collection $collection)
     {
         if ($this->getOrderByField() && $this->getOrderByDirection()) {
             $collection = $this->processCollectionOrderBy($collection);
@@ -370,17 +375,13 @@ class LogReader
      *
      * @return $this|Collection
      */
-    private function processCollectionOrderBy(Collection $collection)
+    protected function processCollectionOrderBy(Collection $collection)
     {
         $field = $this->getOrderByField();
 
         $direction = $this->getOrderByDirection();
 
-        $desc = false;
-
-        if ($direction === 'desc') {
-            $desc = true;
-        }
+        $desc = $direction === 'desc';
 
         return $collection->sortBy(function ($entry) use ($field) {
             if (property_exists($entry, $field)) {
@@ -390,20 +391,13 @@ class LogReader
     }
 
     /**
-     * Returns the current page from the current input.
-     * Used for pagination.
+     * Returns the current page from the current request.
      *
      * @return int
      */
-    private function getPageFromInput()
+    protected function getPaginationPage()
     {
-        $page = Input::get('page');
-
-        if (is_numeric($page)) {
-            return intval($page);
-        }
-
-        return 1;
+        return request('page', 1);
     }
 
     /**
@@ -412,7 +406,7 @@ class LogReader
      *
      * @param $path
      */
-    private function setCurrentLogPath($path)
+    protected function setCurrentLogPath($path)
     {
         $this->currentLogPath = $path;
     }
@@ -422,7 +416,7 @@ class LogReader
      *
      * @param string $field
      */
-    private function setOrderByField($field)
+    protected function setOrderByField($field)
     {
         $field = strtolower($field);
 
@@ -441,7 +435,7 @@ class LogReader
      *
      * @param string $direction
      */
-    private function setOrderByDirection($direction)
+    protected function setOrderByDirection($direction)
     {
         $direction = strtolower($direction);
 
@@ -451,67 +445,26 @@ class LogReader
     }
 
     /**
-     * Sets the level property to the specified level.
-     *
-     * @param $level
-     */
-    private function setLevel($level)
-    {
-        $level = strtolower($level);
-
-        $this->level = $level;
-    }
-
-    /**
-     * Sets the date property to filter log results.
-     *
-     * @param int $date
-     *
-     * @throws InvalidTimestampException
-     */
-    private function setDate($date)
-    {
-        if (!$this->isValidTimeStamp($date)) {
-            $message = "Inserted date: $date is not a valid timestamp.";
-
-            throw new InvalidTimestampException($message);
-        }
-
-        $this->date = date('Y-m-d', $date);
-    }
-
-    /**
-     * Sets the includeRead property.
-     *
-     * @param bool $bool
-     */
-    private function setIncludeRead($bool = false)
-    {
-        $this->includeRead = $bool;
-    }
-
-    /**
      * Returns true/false if the inserted timestamp is valid.
      *
      * @param $timestamp
      *
      * @return bool
      */
-    private function isValidTimestamp($timestamp)
+    protected function isValidTimestamp($timestamp)
     {
         return is_numeric($timestamp);
     }
 
     /**
-     * Parses the content of the file separating
-     * the errors into a single array.
+     * Parses the content of the file separating the errors into a single array.
      *
      * @param $content
      * @param string $allowedLevel
      *
      * @return array
      */
-    private function parseLog($content, $allowedLevel = 'all')
+    protected function parseLog($content, $allowedLevel = 'all')
     {
         $entries = [];
 
@@ -556,7 +509,7 @@ class LogReader
      *
      * @return array|bool
      */
-    private function getLogFiles()
+    protected function getLogFiles()
     {
         $data = [];
 
@@ -582,7 +535,7 @@ class LogReader
      *
      * @return bool|array
      */
-    private function getLogFileList()
+    protected function getLogFileList()
     {
         $path = $this->getLogPath();
 

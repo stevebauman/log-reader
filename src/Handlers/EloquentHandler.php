@@ -2,8 +2,9 @@
 
 namespace Stevebauman\LogReader\Handlers;
 
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Database\Eloquent\Model;
 use Monolog\Handler\AbstractHandler;
 use Stevebauman\LogReader\Exceptions\ModelDoesNotExistException;
 
@@ -16,17 +17,17 @@ class EloquentHandler extends AbstractHandler
      *
      * @return bool
      */
-    public function handle(array $record = [])
+    public function handle(array $record = []) : bool
     {
-        $model = $this->getModel();
+        $model = $this->createNewModel();
 
-        $model->message     = array_get($record, 'message');
-        $model->context     = array_get($record, 'context');
-        $model->level       = array_get($record, 'level');
-        $model->level_name  = array_get($record, 'level_name');
-        $model->channel     = array_get($record, 'channel');
-        $model->generated   = array_get($record, 'datetime');
-        $model->extra       = array_get($record, 'extra');
+        $model->message     = Arr::get($record, 'message');
+        $model->context     = Arr::get($record, 'context');
+        $model->level       = Arr::get($record, 'level');
+        $model->level_name  = Arr::get($record, 'level_name');
+        $model->channel     = Arr::get($record, 'channel');
+        $model->generated   = Arr::get($record, 'datetime');
+        $model->extra       = Arr::get($record, 'extra');
 
         return $this->createLog($model);
     }
@@ -54,7 +55,7 @@ class EloquentHandler extends AbstractHandler
      *
      * @throws ModelDoesNotExistException
      */
-    public function getModel()
+    public function createNewModel()
     {
         $model = Config::get('log-reader.model');
 

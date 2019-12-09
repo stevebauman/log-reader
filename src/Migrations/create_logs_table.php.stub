@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
@@ -14,16 +15,16 @@ class CreateLogsTable extends Migration
     {
         Schema::create('logs', function (Blueprint $table)
         {
-            $table->increments('id');
+            $table->bigIncrements('id');
             $table->timestamps();
             $table->boolean('read')->default(false);
-            $table->text('message')->nullable();
-            $table->text('context')->nullable();
+            $table->longText('message')->nullable();
+            $table->longText('context')->nullable();
             $table->integer('level');
             $table->string('level_name');
             $table->string('channel');
             $table->dateTime('generated');
-            $table->text('extra')->nullable();
+            $table->longText('extra')->nullable();
         });
     }
 

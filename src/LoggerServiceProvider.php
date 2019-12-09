@@ -2,62 +2,21 @@
 
 namespace Stevebauman\LogReader;
 
-use Monolog\Logger;
-use Illuminate\Log\Writer;
 use Illuminate\Support\ServiceProvider;
 
 class LoggerServiceProvider extends ServiceProvider
 {
     /**
-     * Push the eloquent handler to monolog on boot.
+     * Register the publishable migrations.
+     *
+     * @return void
      */
     public function boot()
     {
-        $handlers = $this->getHandlers();
-
-        $logger = app('log');
-
-        // Make sure the logger is a Writer instance
-        if($logger instanceof Writer) {
-            $this->pushHandlers($logger->getMonolog(), $handlers);
-        }
-    }
-
-    /**
-     * Register bindings in the container.
-     */
-    public function register()
-    {
-        $this->publishes([
-            __DIR__.'/Migrations' => database_path('migrations'),
-        ], 'migrations');
-    }
-
-    /**
-     * Returns the LogReader handlers class array.
-     *
-     * @return array
-     */
-    public function getHandlers()
-    {
-        return app('config')->get('log-reader.handlers', []);
-    }
-
-    /**
-     * Pushes the specific array of handlers into the
-     * Monolog Logger instance.
-     *
-     * @param Logger $logger
-     * @param array $handlers
-     */
-    public function pushHandlers(Logger $logger, array $handlers = [])
-    {
-        if(count($handlers) > 0) {
-            foreach($handlers as $handler) {
-                $handler = app($handler);
-
-                $logger->pushHandler($handler);
-            }
+        if (! class_exists('CreateLogsTable')) {
+            $this->publishes([
+                __DIR__.'/Migrations/create_logs_table.php.stub' => database_path('migrations/'.date('Y_m_d_His', time()).'_create_logs_table.php'),
+            ], 'migrations');
         }
     }
 }
